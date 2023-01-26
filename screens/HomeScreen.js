@@ -24,16 +24,19 @@ const HomeScreen = () => {
 
     <View style={styles.container}>
        <StatusBar
-        animated={true}
+       animated={true}
+       backgroundColor="white"
+       barStyle="dark-content" 
+           />
 
-     
-       />
       <Header/>
        <ScrollView>
         <Stories />
-        {posts.map((post,index) => (
-        <Post post={post} key={index}/>
+        <View style={{marginTop: 4, marginBottom: 80}}>
+       {posts.map((post,index) => (
+       <Post post={post} key={index} />
 ))}
+       </View>
 
         </ScrollView> 
      
@@ -43,7 +46,7 @@ const HomeScreen = () => {
 }
 const styles = StyleSheet.create({
   container: {
-     backgroundColor: 'white',
+   
      flex: 1
   },
 });
