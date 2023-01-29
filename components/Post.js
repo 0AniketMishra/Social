@@ -110,11 +110,8 @@ const PostHeader = ({ post, navigation, follower, following, userInfo }) => (
               username: post.username,
               lowerUsername: post.lowerUsername,
               profile: post.profilePicture,
-              uid: post.owner_uid,
-              follower: follower,
-              following: following,
               email: post.owner_email,
-
+              about: ''
             })
           }
         >
@@ -156,8 +153,8 @@ const PostBody = ({ post, navigation, user }) => (
           style={{
             alignSelf: "stretch",
             height: 400,
-            marginLeft: 4,
-            marginRight: 4,
+            marginLeft: 8,
+            marginRight: 8,
             borderRadius: 10,
             marginBottom: 6
           }}
@@ -165,7 +162,7 @@ const PostBody = ({ post, navigation, user }) => (
         />
       )}
     </View>
-   {post.id === "asdf" &&(
+  
      <View
      style={{
        marginRight: 15,
@@ -211,7 +208,7 @@ const PostBody = ({ post, navigation, user }) => (
        <Text style={{left: -32, color: '#A9A9A9',fontSize: 12 }}>You and others liked this</Text> 
    
    </View>
-   )}
+   
 
   </View>
  </TouchableOpacity>
@@ -234,8 +231,8 @@ const PostFooter = ({
       style={{
         flexDirection: "row",
         alignItems: 'center',
-        marginLeft: 8,
-        marginRight: 8,
+        marginLeft: 4,
+        marginRight: 4,
         marginTop: 4,
         marginBottom: 4,
         borderWidth: 1, 

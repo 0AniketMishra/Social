@@ -14,11 +14,9 @@ export const AuthProvider = ({ children }) => {
 
 const [userInfo, setUserInfo] = useState([])
 const [temp, setTemp] = useState(null)
-const [currentUser, setCurrentUser] = useState(null)
+const [currentUser, setCurrentUser] = useState('asdf')
 
-useEffect( () => {
-  persistence()
- },[])
+
 
 
 const persistence = async () => {
@@ -28,15 +26,22 @@ const persistence = async () => {
     await firebase.auth().signInWithEmailAndPassword(email, password)
 
      }catch(e){
+        setCurrentUser(null)
         console.log("No Previous Login Record Found!",e)
      }
  
   }
   const userHandler =  user =>
     user ?  setCurrentUser(user)  :  setCurrentUser(null)
-  useEffect(
-    () => firebase.auth().onAuthStateChanged(user => userHandler(user)),
+
     
+  useEffect(
+    () => {
+      persistence().then( () => {
+       firebase.auth().onAuthStateChanged(user => userHandler(user))
+      })
+     
+    },
     []
   )
 
@@ -53,4 +58,3 @@ const persistence = async () => {
 export default function useAuth() {
     return useContext(AuthConText)
 }
-

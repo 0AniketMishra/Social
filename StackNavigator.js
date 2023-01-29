@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, StyleSheet, Settings } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import HomeScreen from './screens/HomeScreen';
@@ -11,6 +11,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import HomeNavigation from './Navigation/HomeNavigation';
 import ProfileScreen from './screens/ProfileScreen';
 import ProfileNavigaton from './Navigation/ProfileNavigation';
+import ChatNavigation from './Navigation/ChatNavigation';
+import { getFocusedRouteNameFromRoute, useNavigation, useRoute } from '@react-navigation/native';
+import Shorts from './screens/ShortsScreen';
+import Notifications from './screens/NotificationsScreen';
+
 
 
 const Stack = createBottomTabNavigator();
@@ -18,10 +23,9 @@ const Sck2ta = createNativeStackNavigator();
 
 const StackNavigator = () => {
   const { user } = useAuth()
+  const navigation = useNavigation()
   
-
-  
-  
+ 
   return (
 
     
@@ -30,62 +34,84 @@ const StackNavigator = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: false,
-        // tabBarBackground: () => (
-        //   <BlurView tint="light" intensity={100} style={StyleSheet.absoluteFill} />
-        // ),
+        
+        
+        
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           let iconColor;
-
-          if (route.name === 'Home') {
+          let iconSize = 24
+          
+          if (route.name === 'HomeNavigation') {
 
             iconName = focused
               ? 'home'
               : 'home-outline';
             iconColor = focused
-              ? 'black'
-              : "black"
-          } else if (route.name === 'Profile') {
+              ? '#0078E9'
+              : "grey"
+          } else if (route.name === 'ProfileNavigation') {
 
             iconName = focused ? 'person' : 'person-outline';
             iconColor = focused
-              ? 'black'
-              : "black"
+              ? '#0078E9'
+              : "grey"
           }
-          else if (route.name === 'Chat') {
+          else if (route.name === 'ChatNavigation') {
 
             iconName = focused ? 'chatbubble' : 'chatbubble-outline';
             iconColor = focused
-              ? 'black'
-              : "black"
+              ? '#0078E9'
+              : "grey"
           }
           else if (route.name === 'Login') {
 
             iconName = focused ? 'person' : 'person-outline';
             iconColor = focused
-              ? 'black'
+              ? '#0078E9'
               : "black"
           }
           else if (route.name === 'Signup') {
 
             iconName = focused ? 'person-add' : 'person-add-outline';
             iconColor = focused
-              ? 'black'
+              ? '#0078E9'
               : "black"
           }
+          else if (route.name === 'Shorts') {
+            iconSize = 28
+            iconName = focused ? 'play-circle' : 'play-circle-outline';
+            iconColor = focused
+              ? '#FF7134'
+              : "grey"
+            
+          }
+          else if (route.name === 'Notifications') {
+            
+            iconName = focused ? 'notifications' : 'notifications-outline';
+            iconColor = focused
+              ? '#0078E9'
+              : "grey"
+          }
+         
 
           // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={iconColor} />;
+          return <Ionicons name={iconName} size={iconSize} color={iconColor} />;
           ;
         },
         tabBarActiveTintColor: 'blue',
         tabBarInactiveTintColor: 'gray',
       })}>
+
+        
             {user ? (
               <>
-          <Stack.Screen name="Home" component={HomeNavigation}  />
-          <Stack.Screen name="Chat" component={ChatScreen} />
-          <Stack.Screen name="Profile" component={ProfileNavigaton} />
+          <Stack.Screen name="HomeNavigation" component={HomeNavigation}  />
+          <Stack.Screen name="ChatNavigation" component={ChatNavigation} />
+          <Stack.Screen name="Shorts" component={Shorts} />
+          <Stack.Screen name="Notifications" component={Notifications} />
+          <Stack.Screen name="ProfileNavigation" component={ProfileNavigaton} />
+  
 
          
           </>

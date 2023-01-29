@@ -32,7 +32,14 @@ const ChatList = () => {
       <View style={{ margin: 4, marginLeft: 10,  }}>
         <Text style={{color: 'grey', fontSize: 15}}>Pinned</Text>
       </View>
-      <TouchableOpacity style={{ padding: 8, borderRadius: 9, marginLeft: 4, marginRight: 4, flexDirection: 'row', alignItems: 'center',  }}>
+
+      <TouchableOpacity style={{ padding: 8, borderRadius: 9, marginLeft: 4, marginRight: 4, flexDirection: 'row', alignItems: 'center',  }} 
+       onPress={() => navigation.navigate('Message', {
+        lowerUsername: "@elonmusk", 
+        username: "Elon Musk", 
+        profile: 'https://th.bing.com/th/id/OIP.0HPHOhiMHVdQGlxYc4z86AHaFj?pid=ImgDet&rs=1'
+       })}
+      >
         <View>
           <Image
             style={{ width: 50, height: 50, borderRadius: 50, }}
@@ -59,7 +66,14 @@ const ChatList = () => {
       <View style={{ margin: 4, marginLeft: 10 }}>
         <Text style={{color: 'grey', fontSize: 15}}>Other</Text>
       </View>
-      <TouchableOpacity style={{ padding: 8, borderRadius: 9, marginLeft: 4, flexDirection: 'row', alignItems: 'center' }}>
+      <TouchableOpacity  style={{ padding: 8, borderRadius: 9, marginLeft: 4, flexDirection: 'row', alignItems: 'center' }}
+      
+      onPress={() => navigation.navigate('Message', {
+        lowerUsername: "@markzuckerberg", 
+        username: "Mark Zuckerberg", 
+        profile: 'https://specials-images.forbesimg.com/imageserve/5c76b7d331358e35dd2773a9/416x416.jpg?background=000000&cropX1=0&cropX2=4401&cropY1=0&cropY2=4401'
+       })}
+       >
         <View>
           <Image
             style={{ width: 50, height: 50, borderRadius: 50, }}
@@ -82,7 +96,12 @@ const ChatList = () => {
             </View>
            </View>
       </TouchableOpacity>
-      <TouchableOpacity style={{ padding: 8, borderRadius: 9, marginLeft: 4, flexDirection: 'row', alignItems: 'center' }}>
+      <TouchableOpacity style={{ padding: 8, borderRadius: 9, marginLeft: 4, flexDirection: 'row', alignItems: 'center' }}
+       onPress={() => navigation.navigate('Message', {
+        lowerUsername: "@billgates", 
+        username: "Bill Gates", 
+        profile: 'https://specials-images.forbesimg.com/imageserve/62d599ede3ff49f348f9b9b4/416x416.jpg?background=000000&cropX1=155&cropX2=976&cropY1=340&cropY2=1161'
+       })}>
         <View>
           <Image
             style={{ width: 50, height: 50, borderRadius: 50, }}

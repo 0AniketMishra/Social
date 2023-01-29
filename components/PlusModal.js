@@ -13,7 +13,8 @@ const PlusModal = () => {
 }
 const styles = StyleSheet.create({
   container: {
-  marginTop: 8,
+   flex: 1, 
+   backgroundColor: 'white'
   },
 });
 

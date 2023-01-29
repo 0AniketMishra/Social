@@ -4,13 +4,36 @@ import { View, Text, Image, Button, Pressable, TouchableOpacity, ScrollView } fr
 import { useEffect, useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import useAuth from '../hooks/useAuth';
 
 const Profile = () => {
-    const [userInfo, setUserInfo] = useState({username: 'Aniket Mishra', lowerUsername: '@aniketmishra',  profile: '', followers: [], following: [], about: '' });
+    // const [userInfo, setUserInfo] = useState({username: 'Aniket Mishra', lowerUsername: '@aniketmishra',  profile: '', followers: [], following: [], about: '' });
+     const [userInfo, setUserInfo] = useState([])
     const navigation = useNavigation()
     const [followers, setFollowers] = useState([]);
     const [following, setFollowing] = useState([]);
     const [currentTab, setCurrentTab] = useState("Posts")
+    const {user} = useAuth()
+
+    useEffect(() => {
+      fetch('https://social-backend-three.vercel.app/userdata', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+  
+        },
+        body: JSON.stringify({
+          email: user.email
+        })
+      })
+        .then(res => res.json())
+        .then(async data => {
+          if (data.message == "User Found") {
+            setUserInfo(data.savedUser)
+            console.log("User", data.savedUser)
+          }
+        })
+    }, [])
 
   return (
     <ScrollView>

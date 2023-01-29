@@ -4,7 +4,8 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import firebase from '../firebase';
 import { useRoute } from '@react-navigation/native';
-
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import  PlusIcon  from "react-native-heroicons/outline";
 
 const Header = () => {
@@ -12,25 +13,29 @@ const Header = () => {
   const route = useRoute();
   
 
-
+const Logout = async () => {
+  await AsyncStorage.removeItem("email")
+  await AsyncStorage.removeItem("password")
+  firebase.auth().signOut()
+}
   return (
     <View style={{backgroundColor: 'white'}}>
       <View style={styles.container}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={Logout}>
           <Image style={styles.logo} source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png' }} onPress={() => firebase.auth().signOut()}/>
           {/* <Text style={{ fontSize: 20, fontWeight: '500', }} onPress={() => firebase.auth().signOut()}>{route.name}</Text> */}
         </TouchableOpacity>
         <View style={styles.iconsContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('Plus')}>
-            <Image style={styles.icon} source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/pentagon-89b4a.appspot.com/o/plus.png?alt=media&token=2c7450d4-d140-41cb-a20c-42a269734af2' }} />
+          <Ionicons name="add-outline" size={24} color="black" style={styles.icon}/>
             {/* <PlusIcon/> */}
             {/* <Camera/> */}
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('ChatNavigation')}>
             <View style={styles.unreadBadge}>
-              <Text style={styles.unreadText}>12</Text>
+              <Text style={styles.unreadText}>2</Text>
             </View>
-            <Image style={styles.icon} source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/pentagon-89b4a.appspot.com/o/message.png?alt=media&token=c57601d4-3950-4dcb-84b8-6f85bd67c6d6' }} />
+            <Ionicons name="chatbubble-outline" size={24} color="black" style={styles.icon}/>
           </TouchableOpacity>
 
         </View>

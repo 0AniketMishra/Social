@@ -1,38 +1,120 @@
 import React from 'react'
-import Header from '../components/Header'
-import { View, Text, Image, Button, Pressable, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, Image, Button, Pressable, TouchableOpacity, ScrollView, ActivityIndicatorBase, ActivityIndicator } from 'react-native'
 import { useEffect, useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import useAuth from '../hooks/useAuth';
 
 const Profile = () => {
-    const [userInfo, setUserInfo] = useState({username: 'Aniket Mishra', lowerUsername: '@aniketmishra',  profile: '', followers: [], following: [], about: '' });
-    const navigation = useNavigation()
-    const [followers, setFollowers] = useState([]);
-    const [following, setFollowing] = useState([]);
-    const [currentTab, setCurrentTab] = useState("Posts")
+  const route = useRoute()
+  const [userInfo, setUserInfo] = useState([]);
+  const { username, lowerUsername, profile, about, email } = route.params
+  const { user } = useAuth()
+  const navigation = useNavigation()
+  const [currentTab, setCurrentTab] = useState("Posts")
+  const [isfollowing, setIsFollowing] = useState(false)
+  const [loading, setLoading] = useState(true)
 
+  useEffect(() => {
+    loaddata()
+
+  })
+
+  const loaddata = () => {
+   
+    fetch('https://social-backend-three.vercel.app/userdata', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email
+      })
+    })
+      .then(res => res.json())
+      .then(async data => {
+        if (data.message == "User Found") {
+          setUserInfo(data.savedUser)
+          console.log("User", data.savedUser)
+        }
+      })
+    check()
+   
+  }
+
+
+  const check = () => {
+    if (userInfo?.followers?.includes(user.email)) {
+      setIsFollowing(true)
+    } else {
+      setIsFollowing(false)
+    }
+    setLoading(false)
+  }
+
+  const follow = async () => {
+   
+      setIsFollowing(true)
+      fetch('https://social-backend-three.vercel.app/followuser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          followfrom: user.email,
+          followto: email
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          check()
+          loaddata()
+        })
     
+  }
+const unfollow = () => {
+  fetch('https://social-backend-three.vercel.app/unfollowuser', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      unfollowfrom: user.email,
+      unfollowto: email
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      check()
+      loaddata()
+    })
+}
 
   return (
     <ScrollView>
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+     {loading == true ? (
+     <View>
+      <ActivityIndicator/>
+     </View>
+     ): (
+      <View>
+         <View style={{ flex: 1, backgroundColor: 'white' }}>
         {/* <Header /> */}
         <View style={{ position: "absolute", zIndex: 999 }}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            margin: 8,
-            padding: 4,
-            alignItems: "center",
-          }}
-        >
-          <Ionicons name="arrow-back" size={24} color="white" />
-          <Text style={{ fontSize: 18, color: "white" }}>{userInfo.username}</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              margin: 8,
+              padding: 4,
+              alignItems: "center",
+            }}
+          >
+            <Ionicons name="arrow-back" size={24} color="white" />
+            <Text style={{ fontSize: 18, color: "white" }}>{username}</Text>
+          </TouchableOpacity>
+        </View>
         <View>
           <View>
             <Image style={{ alignSelf: "stretch", height: 200, marginBottom: 8 }} source={{ uri: 'https://pbs.twimg.com/profile_banners/44196397/1576183471/600x200' }} />
@@ -40,13 +122,28 @@ const Profile = () => {
 
             <><Image style={{ width: 100, height: 100, borderRadius: 100, top: 150, position: 'absolute', zIndex: 999, left: 15 }} source={{ uri: userInfo.profile ? userInfo.profile : 'https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg' }} /><View style={{ flexDirection: "row", justifyContent: "flex-end", marginRight: 12 }}>
 
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Ionicons name="settings-outline" size={24} color="black" />
-               <Text style={{ borderWidth: 1, borderRadius: 16, padding: 6, fontWeight: '600',marginLeft: 6 }} onPress={() => navigation.navigate("EditProfile", {
-                lastUsername: userInfo.username,
-                lastAbout: userInfo.about
-              })}>Edit Profile</Text>
-            </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                {user.email == email ? (
+                  <Text style={{ borderWidth: 1, borderRadius: 16, padding: 6, fontWeight: '600', marginLeft: 6 }} onPress={() => navigation.navigate("EditProfile", {
+                    lastUsername: username,
+                    lastAbout: about
+                  })}>Edit Profile</Text>
+                ) : (
+                 <>
+              
+                    <Pressable onPress={isfollowing ? unfollow : follow}>
+                    {loading ? (
+                      <ActivityIndicator/>
+                    ): (
+                    <Text style={{ borderWidth: 1, borderRadius: 16, padding: 6, fontWeight: '600', marginLeft: 6 }} >{isfollowing ? "Following" : "Follow"}</Text>
+
+                    )}
+                  </Pressable>
+                   
+                  </>
+                )}
+              </View>
             </View></>
 
 
@@ -60,11 +157,11 @@ const Profile = () => {
 
             <View style={{ marginLeft: 20, }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ fontSize: 22, fontWeight: 'bold' }}>{userInfo.username}</Text>
+                <Text style={{ fontSize: 22, fontWeight: 'bold' }}>{username}</Text>
                 <Image style={{ width: 20, height: 20, marginLeft: 2, bottom: -2 }} source={{ uri: 'https://th.bing.com/th/id/OIP.Qq0Ov_N_BiXjTfZA3EriXQHaHa?pid=ImgDet&rs=1' }} />
               </View>
-              <Text style={{ fontSize: 12, fontWeight: '200', top: -4, color: 'grey' }}>{userInfo.lowerUsername}</Text>
-              <Text>{userInfo.descritption}</Text>
+              <Text style={{ fontSize: 12, fontWeight: '200', top: -4, color: 'grey' }}>{lowerUsername}</Text>
+              <Text>{about == "" || null ? "Hey There I am using Social" : about}</Text>
 
               {/* <View style={{ marginTop: 10, flexDirection: 'row' }}>
                     <Ionicons name="ios-location-sharp" size={24} color="black" />
@@ -78,11 +175,11 @@ const Profile = () => {
 
               <View style={{ marginTop: 10, marginBottom: 10, flexDirection: 'row' }}>
                 <View style={{ flexDirection: 'row', marginRight: 4 }}>
-                  <Text style={{ fontWeight: "bold", marginRight: 2 }}>{followers.length}</Text>
+                  <Text style={{ fontWeight: "bold", marginRight: 2 }}>{userInfo.followers?.length}</Text>
                   <Text>Followers</Text>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontWeight: "bold", marginRight: 2 }}>{following.length}</Text>
+                  <Text style={{ fontWeight: "bold", marginRight: 2 }}>{userInfo.following?.length}</Text>
                   <Text>Following</Text>
                 </View>
               </View>
@@ -94,7 +191,7 @@ const Profile = () => {
 
           </View>
           <View>
-          <View style={{ flexDirection: 'row', marginTop: 4, justifyContent: 'space-evenly', borderBottomWidth: 1, borderBottomColor: '#D6D6D6' }}>
+            <View style={{ flexDirection: 'row', marginTop: 4, justifyContent: 'space-evenly', borderBottomWidth: 1, borderBottomColor: '#D6D6D6' }}>
               {currentTab == "Posts" ? (
                 <TouchableOpacity style={{ borderBottomWidth: 2, }}>
                   <Text style={{ margin: 4 }}>Posts</Text>
@@ -135,7 +232,7 @@ const Profile = () => {
             <View>
               <View
                 style={{ justifyContent: "space-between", flexDirection: "row", margin: 5 }}
-                >
+              >
                 <View style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}>
                   <View>
                     <Image
@@ -159,21 +256,6 @@ const Profile = () => {
                   <Text style={{ marginRight: 10, fontSize: 22, color: 'grey' }}>...</Text>
                 </View>
               </View>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               <TouchableOpacity
 
@@ -258,43 +340,47 @@ const Profile = () => {
 
                 </View>
               </TouchableOpacity>
-              <View style={{ marginLeft: 10, marginRight: 10, marginBottom: 4,borderTopColor: '#E9E9E9',
-  borderTopWidth: 1, }}>
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: 'center',
-        marginLeft: 8,
-        marginRight: 8,
-        marginTop: 4,
-        marginBottom: 4
-      }}
-    >
-      <TouchableOpacity
-        style={{ flexDirection: "row", borderRadius: 4,padding: 4, }}
-      >
-       
-          <Ionicons name="heart-outline" size={21} color="black" />
-        
-        <Text style={{ marginLeft: 6, fontSize: 16, marginRight: 6 }}>
-         0 
-        </Text>
-      </TouchableOpacity>
+              <View style={{
+                marginLeft: 10, marginRight: 10, marginBottom: 4, borderTopColor: '#E9E9E9',
+                borderTopWidth: 1,
+              }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: 'center',
+                    marginLeft: 8,
+                    marginRight: 8,
+                    marginTop: 4,
+                    marginBottom: 4
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{ flexDirection: "row", borderRadius: 4, padding: 4, }}
+                  >
 
-      <TouchableOpacity
-        style={{ flexDirection: "row", marginLeft: 12, padding: 4, borderRadius: 4 }}
-       
-      >
-        <Ionicons name="chatbubble-outline" size={21} color="black" />
-        <Text style={{ marginLeft: 4, fontSize: 16 }}>0 </Text>
-      </TouchableOpacity>
-     
-    </View>
-  </View>
+                    <Ionicons name="heart-outline" size={21} color="black" />
+
+                    <Text style={{ marginLeft: 6, fontSize: 16, marginRight: 6 }}>
+                      0
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={{ flexDirection: "row", marginLeft: 12, padding: 4, borderRadius: 4 }}
+
+                  >
+                    <Ionicons name="chatbubble-outline" size={21} color="black" />
+                    <Text style={{ marginLeft: 4, fontSize: 16 }}>0 </Text>
+                  </TouchableOpacity>
+
+                </View>
+              </View>
             </View>
           </View>
         </View>
       </View>
+      </View>
+     )}
     </ScrollView>
   )
 }
