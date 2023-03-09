@@ -14,13 +14,16 @@ export const AuthProvider = ({ children }) => {
 
 const [userInfo, setUserInfo] = useState([])
 const [temp, setTemp] = useState(null)
-const [currentUser, setCurrentUser] = useState('asdf')
+const [currentUser, setCurrentUser] = useState("loadding...")
 
 
 
 
 const persistence = async () => {
   try{
+   const temp = await AsyncStorage.getItem('user')
+   const temp2 = JSON.parse(temp)
+   setCurrentUser(temp2)
     const email = await AsyncStorage.getItem("email")
     const password = await AsyncStorage.getItem("password")
     await firebase.auth().signInWithEmailAndPassword(email, password)

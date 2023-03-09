@@ -7,6 +7,7 @@ import { useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import  PlusIcon  from "react-native-heroicons/outline";
+import { Entypo } from '@expo/vector-icons';
 
 const Header = () => {
   const navigation = useNavigation()
@@ -27,17 +28,22 @@ const Logout = async () => {
         </TouchableOpacity>
         <View style={styles.iconsContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('Plus')}>
-          <Ionicons name="add-outline" size={24} color="black" style={styles.icon}/>
+    
+          <Entypo name="plus" size={24} color="black" style={styles.icon}/>
             {/* <PlusIcon/> */}
             {/* <Camera/> */}
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('ChatNavigation')}>
+          {/* <TouchableOpacity onPress={() => navigation.navigate('ChatNavigation')}>
             <View style={styles.unreadBadge}>
               <Text style={styles.unreadText}>2</Text>
             </View>
             <Ionicons name="chatbubble-outline" size={24} color="black" style={styles.icon}/>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+<TouchableOpacity onPress={() => navigation.navigate('Search')}>
 
+          <Entypo name="magnifying-glass" size={24} color="black" style={styles.icon}/>
+       
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -66,7 +72,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 32,
     marginLeft: 10,
-    resizeMode: 'contain',
+   
   },
   unreadBadge: {
     backgroundColor: '#FF3250',

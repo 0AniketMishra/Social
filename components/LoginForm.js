@@ -17,9 +17,6 @@ const LoginForm = () => {
   const navigation = useNavigation()
 
   const { user } = useAuth()
-
-
-
     const LoginFormSchema = Yup.object().shape({
         email: Yup.string().email().required("An email is required."),
         password: Yup.string()
@@ -32,6 +29,7 @@ const LoginForm = () => {
       await firebase.auth().signInWithEmailAndPassword(email, password)
       await AsyncStorage.setItem('email', email)
       await AsyncStorage.setItem('password', password)
+   
       console.log("Login Success! 🔥", email, password)
       } catch(error) {
         console.log(error.message);

@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import useAuth from '../hooks/useAuth';
+import { Feather } from "@expo/vector-icons";
+import { Octicons } from '@expo/vector-icons';
 
-const Profile = () => {
+const UserProfileScreen = () => {
   const route = useRoute()
   const [userInfo, setUserInfo] = useState([]);
   const { username, lowerUsername, profile, about, email } = route.params
@@ -13,15 +15,13 @@ const Profile = () => {
   const navigation = useNavigation()
   const [currentTab, setCurrentTab] = useState("Posts")
   const [isfollowing, setIsFollowing] = useState(false)
-  const [loading, setLoading] = useState(true)
+ const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    loaddata()
+  
 
-  })
 
-  const loaddata = () => {
    
+   useEffect(() => {
     fetch('https://social-backend-three.vercel.app/userdata', {
       method: 'POST',
       headers: {
@@ -35,12 +35,16 @@ const Profile = () => {
       .then(async data => {
         if (data.message == "User Found") {
           setUserInfo(data.savedUser)
-          console.log("User", data.savedUser)
+         
         }
       })
-    check()
+
+   },[])
+  
+  
    
-  }
+   
+  
 
 
   const check = () => {
@@ -49,7 +53,7 @@ const Profile = () => {
     } else {
       setIsFollowing(false)
     }
-    setLoading(false)
+   
   }
 
   const follow = async () => {
@@ -108,11 +112,11 @@ const unfollow = () => {
               alignItems: "center",
               margin: 8,
               padding: 4,
-              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <Ionicons name="arrow-back" size={24} color="white" />
-            <Text style={{ fontSize: 18, color: "white" }}>{username}</Text>
+            <Text style={{marginLeft: 8, color: 'white', fontWeight: 'bold', fontSize: 18}}>{username}</Text>
           </TouchableOpacity>
         </View>
         <View>
@@ -123,23 +127,33 @@ const unfollow = () => {
             <><Image style={{ width: 100, height: 100, borderRadius: 100, top: 150, position: 'absolute', zIndex: 999, left: 15 }} source={{ uri: userInfo.profile ? userInfo.profile : 'https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg' }} /><View style={{ flexDirection: "row", justifyContent: "flex-end", marginRight: 12 }}>
 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
+            <TouchableOpacity style={{ padding: 6, borderRadius: 24, justifyContent: 'center', alignItems: 'center', }}>
+            <Feather name="send" size={22} color="grey"  />
+              
+            </TouchableOpacity>
                 {user.email == email ? (
-                  <Text style={{ borderWidth: 1, borderRadius: 16, padding: 6, fontWeight: '600', marginLeft: 6 }} onPress={() => navigation.navigate("EditProfile", {
+                  <Text style={{ backgroundColor: '#E9E9E9', borderRadius: 16, padding: 6, fontWeight: '600', marginLeft: 6 }} onPress={() => navigation.navigate("EditProfile", {
                     lastUsername: username,
                     lastAbout: about
                   })}>Edit Profile</Text>
                 ) : (
                  <>
               
-                    <Pressable onPress={isfollowing ? unfollow : follow}>
-                    {loading ? (
-                      <ActivityIndicator/>
-                    ): (
-                    <Text style={{ borderWidth: 1, borderRadius: 16, padding: 6, fontWeight: '600', marginLeft: 6 }} >{isfollowing ? "Following" : "Follow"}</Text>
+                    {isfollowing ? ( 
+                      <Pressable onPress={unfollow}>
+                   
+                      <Text style={{ borderRadius: 16, padding: 6, fontWeight: '600', marginLeft: 6, fontWeight: 'bold', borderWidth: 1 }} >Following</Text>
+  
+                      
+                    </Pressable>
+                    ) : (
+                      <Pressable onPress={follow}>
+                   
+                    <Text style={{ borderRadius: 16, padding: 6, fontWeight: '600', marginLeft: 6, fontWeight: 'bold', borderWidth: 1 }} >Follow</Text>
 
-                    )}
+                    
                   </Pressable>
+                    )}
                    
                   </>
                 )}
@@ -159,6 +173,9 @@ const unfollow = () => {
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={{ fontSize: 22, fontWeight: 'bold' }}>{username}</Text>
                 <Image style={{ width: 20, height: 20, marginLeft: 2, bottom: -2 }} source={{ uri: 'https://th.bing.com/th/id/OIP.Qq0Ov_N_BiXjTfZA3EriXQHaHa?pid=ImgDet&rs=1' }} />
+             
+                {/* <Octicons name="verified" size={18} color="#3673CF" style={{marginLeft: 2}}/>
+                <Ionicons name="checkmark-circle" size={24} color="#3673CF" /> */}
               </View>
               <Text style={{ fontSize: 12, fontWeight: '200', top: -4, color: 'grey' }}>{lowerUsername}</Text>
               <Text>{about == "" || null ? "Hey There I am using Social" : about}</Text>
@@ -385,4 +402,4 @@ const unfollow = () => {
   )
 }
 
-export default Profile
+export default UserProfileScreen

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, Image } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, Touchable } from 'react-native'
 import React, {useState} from 'react'
 import { Ionicons } from '@expo/vector-icons';
 const Stories = () => {
@@ -15,21 +15,25 @@ const Stories = () => {
      <View style={{ backgroundColor: 'white',}}>
          <View style={{ marginBottom: 12,marginTop: 10, marginLeft: 5,  }}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <TouchableOpacity>
           <View style={{marginLeft: 4, marginRight: 4,  width: 54, height: 54, backgroundColor: '#D4E4F4', borderRadius: 50, alignItems: "center", justifyContent: "center", alignItems: 'center' }}>
-          <Ionicons name="add" size={30} color="#0078E9" style={{marginLeft:2}}/>
-          </View>
+           <Ionicons name="add" size={30} color="#0078E9" style={{marginLeft:2}}/>
+            </View>
+          </TouchableOpacity>
             
             {data?.map(info => {
                  return(
-                    <View style={{ alignItems: 'center', }} key={info.id}>
+                   <TouchableOpacity key={info.id}>
+                     <View style={{ alignItems: 'center', }} >
                     <View style={{ marginLeft: 6, marginRight: 6 }}>
-                        <View style={{ width: 54, height: 54, backgroundColor: 'white', borderRadius: 50, alignItems: "center", justifyContent: "center", borderWidth: 2, borderColor: "black", }}>
+                        <View style={{ width: 54, height: 54, backgroundColor: 'white', borderRadius: 50, alignItems: "center", justifyContent: "center", }}>
                             <Image style={styles.story} source={{ uri: info?.profile }} />
   
                         </View>
                         {/* <Text>{info.lowerUsername.length > 6 ?  info.lowerUsername.slice(0, 6) + '...' : "Elon Musk".toLowerCase()}</Text> */}
                     </View>
                 </View>
+                   </TouchableOpacity>
                  )
             })}
              

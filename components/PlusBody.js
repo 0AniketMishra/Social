@@ -16,15 +16,20 @@ const PlusBody = () => {
   const [text, onChangeText] = useState("");
   const [userInfo, setUserInfo] = useState([])
   const [localImg, setLocalImg] = useState('')
-  const [image, setImage] = useState(null);
+  const [localImg2, setLocalImg2] = useState('')
+  const [image, setImage] = useState("");
+  const [image2, setImage2] = useState("");
+  const [image3, setImage3] = useState("");
+  const [image4, setImage4] = useState("");
+
   const [uri, setUri] = useState("")
 
   const uploadImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
+      allowsMultipleSelection: true,
+      aspect: [1, 1],
       quality: 1,
     });
     setLoading(true)
@@ -43,25 +48,25 @@ const PlusBody = () => {
       } catch (err) {
         console.log(err)
       }
-    } else {
-
-    }
+      if(result.assets[1]){
+        try {
+          const response = await fetch(result.assets[1].uri)
+        const blob = await response.blob()
+        const filename = result.assets[1].uri.substring(result.assets[1].uri)
+        const ref = firebase.storage().ref().child(text+"2") 
+        const snapshot = await ref.put(blob)
+        const url = await snapshot.ref.getDownloadURL()
+        setLocalImg2(result.assets[1].uri)
+        setImage2(url)
+      } catch (err) {
+        console.log(err)
+      }
+      }
+    } 
    setLoading(false)
   };
 
-  useEffect(() => {
-    firebase.firestore().collection('users')
-      .where('owner_uid', "==", user.uid).limit(1).onSnapshot(
-        snapshot => snapshot.docs.map(doc => {
-          setUserInfo({
-            username: doc.data().username,
-            profilePicture: doc.data().profile_picture,
-            lowerUsername: doc.data().lowerUsername,
-
-          })
-        })
-      )
-  }, [])
+  
 
 
   const SubmitPost = async () => {
@@ -73,17 +78,14 @@ const PlusBody = () => {
       }, 
       body: JSON.stringify({
         email: user.email, 
-        image: image,
+        image1: image,
+        image2: image2,
+        image3: image3, 
+        image4: image4,
         posttext: text
-       
       })
     })
     .then(res => res.json())
-    .then(data => {
-      if(data.message == "error adding post"){
-       console.log("SOmething WeeenT WroNg..")
-      }
-    })
     }
     catch(err){
       console.log(err)
@@ -92,7 +94,9 @@ const PlusBody = () => {
     onChangeText("")
   }
 
-
+const clickImage = () => {
+  
+}
 
   return (
 
@@ -137,6 +141,7 @@ const PlusBody = () => {
            {image && !loading ? (
              <View style={{ marginLeft: 22, }}>
              <Image source={{ uri: localImg }} style={{ width: 200, height: 200, borderRadius: 12 }} />
+             <Image source={{ uri: localImg2 }} style={{ width: 200, height: 200, borderRadius: 12 }} />
              <View style={{ flexDirection: 'row', alignItems: 'center', width: 200, height: 20, marginTop: 5 }}>
                <Text style={{color: 'grey'}}>Tag People</Text>
                <Text style={{color: 'grey'}}>  |  </Text>
@@ -164,7 +169,7 @@ const PlusBody = () => {
               <TouchableOpacity >
                 <MaterialIcons name="emoji-emotions" size={24} color="#0096F6" style={{ marginLeft: 10 }} />
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={clickImage}>
                 <MaterialIcons name="my-location" size={24} color="#0096F6" style={{ marginLeft: 10 }} />
               </TouchableOpacity>
             </View>
