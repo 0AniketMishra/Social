@@ -3,6 +3,7 @@ import React, {useEffect} from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import PlusModal from '../components/PlusModal';
+import Message from '../components/Message';
 import UserProfileScreen from '../screens/UserProfileScreen'
 import UserPostScreen from '../screens/UserPostScreen';
 import SearchScreen from '../screens/SearchScreen';
@@ -23,7 +24,11 @@ const HomeNavigation = () => {
        }else if("Plus".includes(getFocusedRouteNameFromRoute(route))){
         navigation.setOptions({tabBarStyle: {display: 'none'}});
 
-       } else {
+       }else if("Message".includes(getFocusedRouteNameFromRoute(route))){
+        navigation.setOptions({tabBarStyle: {display: 'none'}});
+
+       }
+        else {
        navigation.setOptions({tabBarStyle: {display: 'flex'}});
       }
   }, [navigation, route]);
@@ -36,6 +41,7 @@ const HomeNavigation = () => {
             <Stack.Screen name="UserProfile" component={UserProfileScreen}  />
             <Stack.Screen name="UserPost" component={UserPostScreen}  />
             <Stack.Screen name="Search" component={SearchScreen}  />
+            <Stack.Screen name="Message" component={Message}  />
     </Stack.Navigator>
   )
 }

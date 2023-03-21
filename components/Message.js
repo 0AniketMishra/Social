@@ -1,23 +1,72 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from '@expo/vector-icons';
+import io from 'socket.io-client'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios';
 
+const socket = io('https://socket-io-backend-zeta.vercel.app/')
 
 const Message = () => {
+
   const navigation = useNavigation()
   const route = useRoute()
-  const { username, lowerUsername, profile, email } = route.params;
+  const { username, lowerUsername, profile, email, _id, roomid, chatdata } = route.params;
+  const [data, setData] = useState([])
+  const [id, setid] = useState("")
+  const [text, onChangeText] = useState("");
 
+
+  useEffect(() => {
+    if (chatdata !== null) {
+      setData(chatdata)
+    }
+    socket.emit('join_room', { roomid: roomid })
+    loadMessages(roomid)
+  }, [])
+
+
+  useEffect(() => {
+    socket.on('receive_message', (data) => {
+    })
+  }, [socket])
+
+
+  const handleSend = () => {
+
+    setData([...data, { message: text, receiverid: _id, _id: text }])
+
+  }
+
+  const save = async () => {
+
+    const name = JSON.stringify(username)
+    await AsyncStorage.setItem(name, JSON.stringify(data))
+    const ans = await AsyncStorage.getItem(name)
+
+
+  }
+
+
+  const loadMessages = (temproomid) => {
+
+    axios.post('https://social-backend-three.vercel.app/getmessages', { roomid: temproomid })
+      .then(function (response) {
+        setData(response.data)
+        save()
+      })
+
+  }
   return (
-    <View style={{ flex: 1,  }}>
+    <View style={{ flex: 1, }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: 'white' }}>
         <View>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-           
-<Entypo name="chevron-left" size={24} color="black" />
+
+            < Entypo name="chevron-left" size={24} color="black" />
           </TouchableOpacity>
         </View>
         <View>
@@ -40,46 +89,60 @@ const Message = () => {
         </View>
       </View>
 
-      <View style={{ flex: 1,  }}>
-        <ScrollView style={{marginTop: 10}}>
-          {/* <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 4}}><Text>Today</Text></View> */}
-            {/* <View style={{ flexDirection: 'row', margin: 4,  }}>
-              <View style={{ flexDirection: 'row' }}>
-              <Text style={{ backgroundColor: '#E2E2E2', borderRadius: 8, padding: 5 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</Text> 
+      <View style={{ flex: 1, }}>
+        <ScrollView >
+
+          <View style={{ marginTop: 10 }}>
+            {data.map((message, index) => (
+              <View key={message._id}>
+                {message.senderid != _id ? (
+                  <View style={{ marginRight: 8, marginBottom: 6, marginLeft: 18.2, backgroundColor: '#3673CF', borderTopLeftRadius: 12, padding: 6, fontSize: 14.6, borderTopRightRadius: 12, borderBottomLeftRadius: 12, flex: 1, alignSelf: 'flex-end', paddingLeft: 12, paddingRight: 12, }}>
+                    <Text style={{ color: 'white', }}>
+                      {message.message}
+
+                    </Text>
+                    {/* <Text style={{ color: 'white', fontSize: 8, textAlign: 'right', }}>4:28 PM</Text> */}
+                  </View>
+                ) : (
+                  // <View style={{ marginLeft: 8, marginBottom: 6, marginRight: 18.2 }}>
+                  //   <Text style={{ flex: 1, alignSelf: 'flex-start', backgroundColor: '#1C0473', borderTopLeftRadius: 12, padding: 5, color: 'white', fontSize: 14.6, borderTopRightRadius: 12, borderBottomRightRadius: 12, paddingLeft: 10, paddingRight: 10, }}>
+                  //     {message.message}
+                  //   </Text>
+                  //   <Text>4:28 PM</Text>
+                  // </View>
+                  <View style={{ marginLeft: 8, marginBottom: 6, marginRight: 18.2, backgroundColor: '#1C0473', borderTopLeftRadius: 12, padding: 6, fontSize: 14.6, borderTopRightRadius: 12, borderBottomRightRadius: 12, flex: 1, alignSelf: 'flex-start', paddingLeft: 12, paddingRight: 12, }}>
+                    <Text style={{ color: 'white', }}>
+                      {message.message}
+                    </Text>
+                    {/* <Text style={{ color: 'white', fontSize: 8, textAlign: 'left', }}>4:28 PM</Text> */}
+                  </View>
+                )}
               </View>
-           </View> */}
-         <View style={{marginRight: 8, marginBottom: 6, marginLeft: 18.2}}>
-          <Text style={{flex: 1,alignSelf: 'flex-end', backgroundColor: '#3673CF', borderTopLeftRadius: 12, padding: 5, color: 'white', fontSize: 14.6, borderTopRightRadius: 12, borderBottomLeftRadius: 12, paddingLeft: 10, paddingRight: 10,    }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut  et dolore magna aliqua.
-            </Text>
-            
-         </View>
-         <View style={{marginLeft: 8, marginBottom: 6, marginRight: 18.2}}>
-          <Text style={{flex: 1,alignSelf: 'flex-start', backgroundColor: '#1C0473', borderTopLeftRadius: 12, padding: 5, color: 'white', fontSize: 14.6, borderTopRightRadius: 12, borderBottomRightRadius: 12, paddingLeft: 10, paddingRight: 10,    }}>
-          Lorem ipsum dolor sit amet.
-            </Text>
-            
-         </View>
-         <View style={{marginRight: 8, marginBottom: 6, marginLeft: 18.2}}>
-          <Text style={{flex: 1,alignSelf: 'flex-end', backgroundColor: '#3673CF', borderTopLeftRadius: 12, padding: 5, color: 'white', fontSize: 14.6, borderTopRightRadius: 12, borderBottomLeftRadius: 12, paddingLeft: 10, paddingRight: 10,    }}>
-          Once A Legend Said: A single sheet of paper cannot decide my future .
-            </Text>
-            
-         </View>
+            ))}
+
+
+
+          </View>
         </ScrollView>
       </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 12, marginTop: 3, backgroundColor: 'white'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 12, marginTop: 3, backgroundColor: 'white' }}>
         <TouchableOpacity>
           <Feather name="smile" size={23} color="grey" />
-          
+
         </TouchableOpacity>
-        
-        <TextInput placeholder="Say Something...." style={{ flex: 1, marginRight: 6, marginLeft: 6 }} />
+
+        <TextInput
+          style={{ flex: 1, marginRight: 6, marginLeft: 6 }}
+          value={text}
+          onChangeText={onChangeText}
+          placeholder="Say Something..."
+          multiline={true}
+        />
         <TouchableOpacity style={{ marginRight: 4 }}>
-         
+
         </TouchableOpacity>
-        <TouchableOpacity>
-        <Feather name="send" size={22} color="grey"  />
+        <TouchableOpacity onPress={handleSend}>
+          <Feather name="send" size={22} color="grey" />
         </TouchableOpacity>
       </View>
     </View>

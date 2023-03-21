@@ -6,46 +6,67 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import useAuth from '../hooks/useAuth';
 import { Feather } from "@expo/vector-icons";
 import { Octicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios';
+
 
 const UserProfileScreen = () => {
   const route = useRoute()
   const [userInfo, setUserInfo] = useState([]);
-  const { username, lowerUsername, profile, about, email } = route.params
+  const { username,lowerUsername , profile, about, email, _id } = route.params
   const { user } = useAuth()
   const navigation = useNavigation()
   const [currentTab, setCurrentTab] = useState("Posts")
   const [isfollowing, setIsFollowing] = useState(false)
- const [loading, setLoading] = useState(false)
-
+  const [loading, setLoading] = useState(false)
+  const [id, setid] = useState("")
+  const [chatData, setChatData] = useState([])
+  const [roomid, setRoomid] = useState("")
   
 
-
+useEffect(() => {
+  fun()
+})
    
    useEffect(() => {
-    fetch('https://social-backend-three.vercel.app/userdata', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email
-      })
+    axios.post('https://social-backend-three.vercel.app/userdata', {email: email})
+    .then(function (response) {
+        setUserInfo(response.data.savedUser)
     })
-      .then(res => res.json())
-      .then(async data => {
-        if (data.message == "User Found") {
-          setUserInfo(data.savedUser)
-         
-        }
-      })
-
    },[])
   
   
    
    
-  
+   const fun = async() => {
 
+    const id = await AsyncStorage.getItem("_id")
+    let temp1 = JSON.parse(id)
+   setid(temp1) 
+   sortroomid()
+   
+   } 
+  
+   const sortroomid = () => {
+     if (_id > id) {
+         let temp = _id + id
+         setRoomid(temp)
+       
+     } else {
+         let temp = id+_id
+         setRoomid(temp)
+     
+     }
+  //  console.log(roomid)
+   localload()
+ } 
+ const localload = async() => {
+  const temp = await AsyncStorage.getItem(JSON.stringify(username))
+  const final = JSON.parse(temp)
+  // console.log('At UserProfilePage the value was', final)
+  setChatData(final)
+
+ }
 
   const check = () => {
     if (userInfo?.followers?.includes(user.email)) {
@@ -103,7 +124,7 @@ const unfollow = () => {
      ): (
       <View>
          <View style={{ flex: 1, backgroundColor: 'white' }}>
-        {/* <Header /> */}
+        {/* <Header /> */} 
         <View style={{ position: "absolute", zIndex: 999 }}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -124,10 +145,19 @@ const unfollow = () => {
             <Image style={{ alignSelf: "stretch", height: 200, marginBottom: 8 }} source={{ uri: 'https://pbs.twimg.com/profile_banners/44196397/1576183471/600x200' }} />
 
 
-            <><Image style={{ width: 100, height: 100, borderRadius: 100, top: 150, position: 'absolute', zIndex: 999, left: 15 }} source={{ uri: userInfo.profile ? userInfo.profile : 'https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg' }} /><View style={{ flexDirection: "row", justifyContent: "flex-end", marginRight: 12 }}>
+            <><Image style={{ width: 100, height: 100, borderRadius: 100, top: 150, position: 'absolute', zIndex: 999, left: 15 }} source={{ uri: profile ? profile : 'https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg' }} /><View style={{ flexDirection: "row", justifyContent: "flex-end", marginRight: 12 }}>
 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity style={{ padding: 6, borderRadius: 24, justifyContent: 'center', alignItems: 'center', }}>
+            <TouchableOpacity style={{ padding: 6, borderRadius: 24, justifyContent: 'center', alignItems: 'center', }} 
+              onPress={() => navigation.navigate('Message', {
+                lowerUsername: lowerUsername, 
+                username: username, 
+                profile: profile == "" ? "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg" :profile,
+                email: email, 
+                _id: _id, 
+                roomid: roomid, 
+                chatdata: chatData
+               })}>
             <Feather name="send" size={22} color="grey"  />
               
             </TouchableOpacity>
@@ -179,6 +209,8 @@ const unfollow = () => {
               </View>
               <Text style={{ fontSize: 12, fontWeight: '200', top: -4, color: 'grey' }}>{lowerUsername}</Text>
               <Text>{about == "" || null ? "Hey There I am using Social" : about}</Text>
+              {/* <Text>{roomid == "" ? "Procesing.." : roomid}</Text> */}
+
 
               {/* <View style={{ marginTop: 10, flexDirection: 'row' }}>
                     <Ionicons name="ios-location-sharp" size={24} color="black" />

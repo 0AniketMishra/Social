@@ -20,6 +20,7 @@ import firebase from "../firebase";
 import useAuth from "../hooks/useAuth";
 import { onSnapshot, query, doc, collection, where, addDoc } from "firebase/firestore";
 import { FontAwesome5 } from "@expo/vector-icons";
+import axios from "axios";
 
 const Post = ({ post }) => {
   const [data, setData] = useState([]);
@@ -38,15 +39,24 @@ const Post = ({ post }) => {
   const dimensions = Dimensions.get('window');
 
   const handleLike = (post) => {
-
-
+    post.likes.push(user.email)
+    axios.post('https://social-backend-three.vercel.app/likepost', {email: user.email, postid: post._id})
+   
+   
   };
+
+  const handleUnlike = (post) => {
+    post.likes?.pop()
+    axios.post('https://social-backend-three.vercel.app/unlikepost', {email: user.email, postid: post._id})
+  
+
+ };
 
   const handleSubmit = async () => {
 
   }
 
-
+ 
   useEffect(() => {
 
     fetch('https://social-backend-three.vercel.app/userdata', {
@@ -103,6 +113,7 @@ const Post = ({ post }) => {
         <PostFooter
           post={post}
           handleLike={handleLike}
+          handleUnlike={handleUnlike}
           user={user}
           comments={comments}
           setComments={setComments}
@@ -134,10 +145,11 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata 
           onPress={() =>
             navigation.navigate("UserProfile", {
               username: tempdata.username,
-              lowerUsername: post.lowerUsername,
-              profile: post.profilePicture,
+              lowerUsername: tempdata.lowerUsername,
+              profile: tempdata.profile,
               email: post.email,
-              about: ''
+              about: '',
+              _id: tempdata._id
             })
           }
         >
@@ -290,6 +302,7 @@ const PostFooter = ({
   userInfo,
   setReplyModal,
   setPostInfo,
+  handleUnlike
 }) => (
   <View style={{
     marginLeft: 10, marginRight: 10, marginBottom: 4, borderTopColor: '#E9E9E9',
@@ -308,17 +321,33 @@ const PostFooter = ({
 
       }}
     >
-      <TouchableOpacity
-        style={{ flexDirection: "row", padding: 4, alignItems: 'center' }}
-        onPress={() => handleLike(post)}
-      >
+     
 
-        <Ionicons name="heart-outline" size={21} color="#919191" />
-
-        <Text style={{ fontSize: 14, marginRight: 6, color: '#595959', marginLeft: 4 }}>
-          11 Likes
+{post.likes.includes(user.email) ? (
+   <TouchableOpacity
+   style={{ flexDirection: "row", padding: 4, alignItems: 'center' }}
+   onPress={() => handleUnlike(post)}
+ >
+  <Ionicons name="heart" size={21} color="#FF3939" />
+  <Text style={{ fontSize: 14, marginRight: 6, color: '#595959', marginLeft: 4 }}>
+          {post.likes.length} Likes
         </Text>
       </TouchableOpacity>
+ 
+) : (
+  <TouchableOpacity
+  style={{ flexDirection: "row", padding: 4, alignItems: 'center' }}
+  onPress={() => handleLike(post)}
+>
+<Ionicons name="heart-outline" size={21} color="#919191" />
+
+ <Text style={{ fontSize: 14, marginRight: 6, color: '#595959', marginLeft: 4 }}>
+         {post.likes.length} Likes
+       </Text>
+     </TouchableOpacity>
+
+)}
+       
 
       <TouchableOpacity
         style={{ flexDirection: "row", marginLeft: 6, padding: 4, borderRadius: 4, alignItems: 'center', }}

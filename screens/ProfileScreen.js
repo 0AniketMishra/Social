@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import useAuth from '../hooks/useAuth';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios';
 
 const Profile = () => {
     // const [userInfo, setUserInfo] = useState({username: 'Aniket Mishra', lowerUsername: '@aniketmishra',  profile: '', followers: [], following: [], about: '' });
@@ -18,29 +20,29 @@ const Profile = () => {
 
     useEffect(() => {
       
-      fetch('https://social-backend-three.vercel.app/userdata', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: user.email
-        })
-      })
-        .then(res => res.json())
-        .then(async data => {
-          if (data.message == "User Found") {
-            setUserInfo(data.savedUser)
-          }
-          setLoading(false)
-        })
-        
-    })
 
+      axios.post('https://social-backend-three.vercel.app/userdata', {email: user.email})
+  .then(function (response) {
+      setUserInfo(response.data.savedUser)
+    setLoading(false)
+    fun()
+  })
+
+    }) 
+ const fun = async () => {
+try{
+
+  await AsyncStorage.setItem('_id', JSON.stringify(userInfo._id)) 
+
+}catch(err){
+  console.log(err)
+}
+
+ }
   return (
    <View>
     {loading ? (
-   <View style={{justifyContent: 'center', alignItems: 'center'}}>
+   <View style={{justifyContent: 'center', alignItems: 'center'}}> 
      <ActivityIndicator size="large" color="black"/>
      
    </View>

@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import axios from 'axios';
 const SearchScreen = () => {
     const route = useRoute()
     const navigation = useNavigation()
@@ -12,28 +13,28 @@ const SearchScreen = () => {
    const [keyword, setKeyword] = useState("")
 
    const fun = () => {
-   console.log("called!")
-      fetch('https://social-backend-three.vercel.app/finduser', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ keyword: keyword })
-      })
-          .then(res => res.json())
-          .then(data => {
-            
-              if (data.message == 'User Found') {
-                  setData(data.user)
-                  console.log(data.user)
-              }
-          })
-          .catch(err => {
-              setData([])
-          })
-   }
+  
+  //     fetch('https://social-backend-three.vercel.app/finduser', {
+  //         method: 'POST',
+  //         headers: {
+  //             'Content-Type': 'application/json'
+  //         },
+  //         body: JSON.stringify({ keyword: keyword })
+  //     })
+  //         .then(res => res.json())
+  //         .then(data => {
+  //                 setData(data.user)
+  //         })
+          
+  //  }
+  axios.post('https://social-backend-three.vercel.app/finduser', {keyword: keyword})
+  .then(function (response) {
+    setData(response.data.user);
+  })}
 
-
+   useEffect(() => {
+    fun()
+}, [keyword])
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center', padding: 8, backgroundColor: 'white',}}>
@@ -44,6 +45,7 @@ const SearchScreen = () => {
         <TextInput placeholder="Search Beyond Possibilities...." style={{ flex: 1, marginRight: 6, marginLeft: 6 }} 
         onChangeText={(text) => {
           setKeyword(text)
+       
       }}
       />
 <TouchableOpacity onPress={fun}>
@@ -62,7 +64,8 @@ const SearchScreen = () => {
             lowerUsername: user.lowerUsername,
             profile: user.profile,
             email: user.email,
-            about: ''
+            about: '',
+            _id: user._id
           })
         }
         >

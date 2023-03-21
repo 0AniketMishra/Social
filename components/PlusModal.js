@@ -6,7 +6,6 @@ import PlusBody from './PlusBody'
 const PlusModal = () => {
   return (
     <View style={styles.container}>
-  
      <PlusBody/>
     </View>
   )

@@ -9,7 +9,7 @@ import PlusModal from '../components/PlusModal'
 import { orderBy } from 'firebase/firestore'
 import useAuth from '../hooks/useAuth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import axios from 'axios'
 
 const HomeScreen = () => {
   const navigation = useNavigation()
@@ -19,39 +19,28 @@ const HomeScreen = () => {
 
   useEffect(() => {
 
-  fetch('https://social-backend-three.vercel.app/allposts', {
-    method: 'POST',
-  })
-    .then(res => res.json())
-    .then(async data => {
-      if (data.message == "Posts Found") {
-        setPosts(data.post)
-        
-      }
-    })
-   
+  axios.post('https://social-backend-three.vercel.app/allposts', {})
+  .then(function (response) {
+    setPosts(response.data.post);
     
+
   })
+  
+  },[])
   useEffect(() => {
-    fun()
+    const fun = async () => {
+      await AsyncStorage.setItem('user', JSON.stringify(user))
+   
+   
+    }
   })
-  const fun = async () => {
-    await AsyncStorage.setItem('user', JSON.stringify(user))
-    const ge = await AsyncStorage.getItem('user')
- 
-  }
+  
   const handleRefresh = () => {
     setIsRefreshing(true) 
-    fetch('https://social-backend-three.vercel.app/allposts', {
-      method: 'POST',
-    })
-      .then(res => res.json())
-      .then(async data => {
-        if (data.message == "Posts Found") {
-          setPosts(data.post)
-          
-        }
-      })
+    axios.post('https://social-backend-three.vercel.app/allposts', {})
+  .then(function (response) {
+    setPosts(response.data.post);
+  })
       setIsRefreshing(false)
 
   }
