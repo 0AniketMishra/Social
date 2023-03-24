@@ -14,9 +14,9 @@ const Message = () => {
 
   const navigation = useNavigation()
   const route = useRoute()
-  const { username, lowerUsername, profile, email, _id, roomid, chatdata } = route.params;
+  const { username, lowerUsername, profile, email, _id, roomid, chatdata, id } = route.params;
   const [data, setData] = useState([])
-  const [id, setid] = useState("")
+  // const [id, setid] = useState("")
   const [text, onChangeText] = useState("");
 
 
@@ -24,19 +24,27 @@ const Message = () => {
     if (chatdata !== null) {
       setData(chatdata)
     }
-    socket.emit('join_room', { roomid: roomid })
     loadMessages(roomid)
   }, [])
 
 
   useEffect(() => {
+    socket.emit('join_room', { roomid: roomid })
+
     socket.on('receive_message', (data) => {
+      console.log(data)
     })
-  }, [socket])
+  })
 
 
   const handleSend = () => {
-
+    const messagedata = { 
+      message: text,
+      roomid: roomid, 
+      senderid: id,
+      recieverid: _id
+  }
+  socket.emit('send_message', messagedata)
     setData([...data, { message: text, receiverid: _id, _id: text }])
 
   }
@@ -58,8 +66,9 @@ const Message = () => {
         setData(response.data)
         save()
       })
-
+ 
   }
+ 
   return (
     <View style={{ flex: 1, }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: 'white' }}>

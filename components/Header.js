@@ -17,6 +17,9 @@ const Header = () => {
 const Logout = async () => {
   await AsyncStorage.removeItem("email")
   await AsyncStorage.removeItem("password")
+  await AsyncStorage.removeItem("_id")
+  await AsyncStorage.removeItem("user")
+
   firebase.auth().signOut()
 }
   return (

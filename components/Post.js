@@ -8,7 +8,8 @@ import {
   StyleSheet,
   PixelRatio,
   ScrollView,
-  Dimensions
+  Dimensions,
+  Pressable 
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,6 +22,8 @@ import useAuth from "../hooks/useAuth";
 import { onSnapshot, query, doc, collection, where, addDoc } from "firebase/firestore";
 import { FontAwesome5 } from "@expo/vector-icons";
 import axios from "axios";
+import { Entypo } from '@expo/vector-icons';
+
 
 const Post = ({ post }) => {
   const [data, setData] = useState([]);
@@ -89,19 +92,14 @@ const Post = ({ post }) => {
       >
         <View style={styles.centeredView} >
           <View style={styles.modalView}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="arrow-back" size={24} color="black" onPress={() => setReplyModal(false)} />
-              <Text style={{ fontSize: 15, marginLeft: 4 }}>Compose A Reply</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2, marginleft: 10 }}>
-              <Text style={{ fontSize: 13, marginLeft: 4 }}>Replying to</Text>
-              <Text style={{ color: '#7EA8F7', fontSize: 13 }}> {postInfo.lowerUsername}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 18, backgroundColor: '#E9E9E9', padding: 5, borderRadius: 8 }}>
-              <Feather name="smile" size={20} color="black" />
-              <TextInput placeholder="Say Something...." style={{ flex: 1, marginLeft: 8, marginRight: 8 }} value={text} onChangeText={onChangeText} />
-              <Feather name="send" size={20} color="black" onPress={handleSubmit} />
-            </View>
+          <View>
+        <View style={{ padding: 8, backgroundColor: 'white'}}>
+        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => setReplyModal(false)}>
+        < Entypo name="chevron-left" size={24} color="black" />
+        <Text style={{fontSize: 17, marginLeft: 3, fontWeight: 'bold'}}>Replies</Text>
+        </TouchableOpacity>
+        </View>
+     </View>
           </View>
         </View>
       </Modal>
@@ -115,11 +113,10 @@ const Post = ({ post }) => {
           handleLike={handleLike}
           handleUnlike={handleUnlike}
           user={user}
-          comments={comments}
-          setComments={setComments}
+          ReplyModal={ReplyModal}
+          setReplyModal={setReplyModal}
           text={text}
           onChangeText={onChangeText}
-          setReplyModal={setReplyModal}
           setPostInfo={setPostInfo}
 
         />
@@ -301,7 +298,7 @@ const PostFooter = ({
   onChangeText,
   userInfo,
   setReplyModal,
-  setPostInfo,
+  ReplyModal,
   handleUnlike
 }) => (
   <View style={{
@@ -324,7 +321,7 @@ const PostFooter = ({
      
 
 {post.likes.includes(user.email) ? (
-   <TouchableOpacity
+   <Pressable
    style={{ flexDirection: "row", padding: 4, alignItems: 'center' }}
    onPress={() => handleUnlike(post)}
  >
@@ -332,10 +329,10 @@ const PostFooter = ({
   <Text style={{ fontSize: 14, marginRight: 6, color: '#595959', marginLeft: 4 }}>
           {post.likes.length} Likes
         </Text>
-      </TouchableOpacity>
+      </Pressable>
  
 ) : (
-  <TouchableOpacity
+  <Pressable
   style={{ flexDirection: "row", padding: 4, alignItems: 'center' }}
   onPress={() => handleLike(post)}
 >
@@ -344,7 +341,7 @@ const PostFooter = ({
  <Text style={{ fontSize: 14, marginRight: 6, color: '#595959', marginLeft: 4 }}>
          {post.likes.length} Likes
        </Text>
-     </TouchableOpacity>
+     </Pressable>
 
 )}
        
@@ -352,11 +349,11 @@ const PostFooter = ({
       <TouchableOpacity
         style={{ flexDirection: "row", marginLeft: 6, padding: 4, borderRadius: 4, alignItems: 'center', }}
         onPress={() =>
-          comments == true ? setComments(false) : setComments(true)
+          ReplyModal == true ? setReplyModal(false) : setReplyModal(true)
         }
       >
         <Ionicons name="chatbubble-outline" size={21} color="#595959" />
-        <Text style={{ marginLeft: 4, fontSize: 14, color: "#595959", marginRight: 4 }}>0 Comments</Text>
+        <Text style={{ marginLeft: 4, fontSize: 14, color: "#595959", marginRight: 4 }}>0 Replies</Text>
       </TouchableOpacity>
 
 
@@ -382,18 +379,18 @@ const PostFooter = ({
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     backgroundColor: "#00000aaa",
+    
 
   },
   modalView: {
-
+    height: 500,
     backgroundColor: "white",
-    borderRadius: 2,
     padding: 10,
-    borderRadius: 14,
-    marginLeft: 10,
-    marginRight: 10,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12
+ 
   },
   button: {
     borderRadius: 20,

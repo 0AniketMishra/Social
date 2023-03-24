@@ -155,6 +155,7 @@ const unfollow = () => {
                 profile: profile == "" ? "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg" :profile,
                 email: email, 
                 _id: _id, 
+                id: id,
                 roomid: roomid, 
                 chatdata: chatData
                })}>
@@ -278,33 +279,51 @@ const unfollow = () => {
                 </TouchableOpacity>
               )}
             </View>
-            <View>
-              <View
-                style={{ justifyContent: "space-between", flexDirection: "row", margin: 5 }}
-              >
-                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}>
-                  <View>
-                    <Image
-                      style={{ width: 42, height: 42, borderRadius: 50, marginLeft: 4 }}
-                      source={{ uri: 'https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg' }}
-                    />
-                  </View>
-                  <View>
-                    <Text
-                      style={{ marginLeft: 10, fontWeight: "bold", fontSize: 14 }}
-                    >
-                      Aniket Mishra
-                    </Text>
-                    <View style={{ flexDirection: "row", alignItems: 'center' }}>
 
-                      <Text style={{ marginLeft: 10, fontSize: 11, fontWeight: '300' }}>10 mins ago</Text>
-                    </View>
-                  </View>
-                </View>
-                <View>
-                  <Text style={{ marginRight: 10, fontSize: 22, color: 'grey' }}>...</Text>
-                </View>
-              </View>
+
+
+
+            
+            <View>
+            <View
+    style={{ justifyContent: "space-between", flexDirection: "row", margin: 5 }}
+  >
+    <View style={{ flexDirection: "row", alignItems: "center", marginTop: 3 }}>
+      <View>
+        <Image
+          style={{ width: 44, height: 44, borderRadius: 50, marginLeft: 4 }}
+          source={{ uri: profile ? profile : 'https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg' }}
+        />
+      </View>
+      <View>
+        <Text
+          style={{ marginLeft: 10, fontWeight: "bold", fontSize: 14 }}
+          onPress={() =>
+            navigation.navigate("UserProfile", {
+              // username: tempdata.username,
+              // lowerUsername: tempdata.lowerUsername,
+              // profile: tempdata.profile,
+              // email: post.email,
+              // about: '',
+              // _id: tempdata._id
+            })
+          }
+        >
+          {username}
+        </Text>
+        <View style={{ flexDirection: "row", alignItems: 'center' }}>
+
+          <Text style={{ marginLeft: 10, fontSize: 12 }}>{lowerUsername} | 2 hours ago</Text>
+        </View>
+      </View>
+    </View>
+    <View style={{flexDirection:'row',alignItems: 'center' }}>
+      {/* <Text style={{ marginRight: 10, fontSize: 22, color: 'grey' }}>...</Text> */}
+      {/* <Text style={{marginRight: 6, fontSize: 12}}>Following</Text>  */}
+
+      <Feather name="more-horizontal" size={20} color="grey" />
+    </View>
+  </View>
 
               <TouchableOpacity
 
