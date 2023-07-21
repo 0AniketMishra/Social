@@ -132,13 +132,13 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata 
     <View style={{ flexDirection: "row", alignItems: "center", marginTop: 3 }}>
       <View>
         <Image
-          style={{ width: 44, height: 44, borderRadius: 50, marginLeft: 4 }}
+          style={{ width: 46, height: 46, borderRadius: 50, marginLeft: 4 }}
           source={{ uri: tempdata.profile ? tempdata.profile : 'https://pbs.twimg.com/profile_banners/44196397/1576183471/600x200' }}
         />
       </View>
       <View>
         <Text
-          style={{ marginLeft: 10, fontWeight: "bold", fontSize: 14 }}
+          style={{marginLeft: 10, fontWeight: "bold", fontSize: 14.5 }}
           onPress={() =>
             navigation.navigate("UserProfile", {
               username: tempdata.username,
@@ -154,7 +154,7 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata 
         </Text>
         <View style={{ flexDirection: "row", alignItems: 'center' }}>
 
-          <Text style={{ marginLeft: 10, fontSize: 12 }}>{tempdata.lowerUsername} | 2 hours ago</Text>
+          <Text style={{ marginLeft: 10, fontSize: 13 }}>{tempdata.lowerUsername} • 2 hours ago</Text>
         </View>
       </View>
     </View>

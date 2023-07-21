@@ -1,99 +1,55 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
-// import { Navigation } from 'react-feather';
-import { useNavigation } from '@react-navigation/native';
-import firebase from '../firebase';
-import { useRoute } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-// import  PlusIcon  from "react-native-heroicons/outline";
 import { Entypo } from '@expo/vector-icons';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import firebase from '../firebase'
+import { Ionicons } from '@expo/vector-icons';
+import useAuth from '../hooks/useAuth';
+import { AntDesign } from '@expo/vector-icons';
 
 const Header = () => {
-  const navigation = useNavigation()
-  const route = useRoute();
-  
+    const navigation = useNavigation()
+    const route = useRoute()
+    const {userdata} = useAuth()
 
-const Logout = async () => {
-  await AsyncStorage.removeItem("email")
-  await AsyncStorage.removeItem("password")
-  await AsyncStorage.removeItem("_id")
-  await AsyncStorage.removeItem("user")
-
-  firebase.auth().signOut()
-}
-  return (
-    <View style={{backgroundColor: 'white'}}>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={Logout}>
-          <Image style={styles.logo} source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png' }} onPress={() => firebase.auth().signOut()}/>
-          {/* <Text style={{ fontSize: 20, fontWeight: '500', }} onPress={() => firebase.auth().signOut()}>{route.name}</Text> */}
-        </TouchableOpacity>
-        <View style={styles.iconsContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('Plus')}>
     
-          <Entypo name="plus" size={24} color="black" style={styles.icon}/>
-            {/* <PlusIcon/> */}
-            {/* <Camera/> */}
-          </TouchableOpacity>
-          {/* <TouchableOpacity onPress={() => navigation.navigate('ChatNavigation')}>
-            <View style={styles.unreadBadge}>
-              <Text style={styles.unreadText}>2</Text>
+    const logout = async () => {
+      await AsyncStorage.removeItem("email")
+      await AsyncStorage.removeItem("password")
+      await AsyncStorage.removeItem("_id")
+      await AsyncStorage.removeItem("user")
+        firebase.auth().signOut()
+    }
+    return (
+        <View style={{ padding: 4, backgroundColor: 'white' }}>
+            <View style={{ justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}} onPress={logout}>
+                    <Image style={{ width: 50, height: 50 }} source={{ uri: 'https://th.bing.com/th/id/R.3d74e8bfd4ef7985f7529bb9f7650eca?rik=RCvdo0dDvjxCWg&riu=http%3a%2f%2fwww.stickpng.com%2fassets%2fimages%2f580b57fcd9996e24bc43c53e.png&ehk=%2fkYf7%2bIY6TUkpUQzwclpivMLQ8ynEgcZYehDGOzbu0E%3d&risl=&pid=ImgRaw&r=0' }} />
+                    {route.name == "ProfileNavigation" ? (
+           <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text style={{fontSize: 16, fontWeight: 'bold', textDecorationLine: 'underline',lineHeight: 20 }}>{userdata.lowerUsername}</Text>
+                <Entypo name="chevron-down" size={24} color="white" />
+           </TouchableOpacity>
+) : (
+ <TouchableOpacity onPress={logout}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold'}}>{route.name}</Text>
+ </TouchableOpacity>
+)}
+                </View>
+                <View style={{ flexDirection: 'row',justifyContent: 'center',padding: 4, marginLeft: 4}}>
+                <TouchableOpacity style={{ width: 40, height: 40, backgroundColor: '#F5F5F5', borderRadius: 24, alignItems: 'center', justifyContent: 'center'}} onPress={() => navigation.navigate("Plus")}>
+                <AntDesign name="plus" size={24} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity style={{marginLeft: 6, width: 40, height: 40, backgroundColor: '#F5F5F5', borderRadius: 24, alignItems: 'center', justifyContent: 'center'}} onPress={() => navigation.navigate('Search')}>
+                <Ionicons  name="search" size={26} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity style={{marginLeft: 6, width: 40, height: 40, backgroundColor: '#F5F5F5', borderRadius: 24, alignItems: 'center', justifyContent: 'center'}} onPress={() => navigation.navigate('Search')}>
+                <Ionicons name="notifications-outline" size={26} color="black" />
+                </TouchableOpacity>
+                </View>
             </View>
-            <Ionicons name="chatbubble-outline" size={24} color="black" style={styles.icon}/>
-          </TouchableOpacity> */}
-<TouchableOpacity onPress={() => navigation.navigate('Search')}>
-
-          <Entypo name="magnifying-glass" size={24} color="black" style={styles.icon}/>
-       
-          </TouchableOpacity>
         </View>
-      </View>
-    </View>
-  )
+    )
 }
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginHorizontal: 20,
-    marginBottom: 8,
-    marginTop: 4,
-
-  },
-  logo: {
-    width: 110,
-    height: 35,
-    
-  },
-  iconsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  icon: {
-    width: 24,
-    height: 32,
-    marginLeft: 10,
-   
-  },
-  unreadBadge: {
-    backgroundColor: '#FF3250',
-    position: 'absolute',
-    left: 20,
-    bottom: 14,
-    width: 21,
-    height: 15,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 100,
-  },
-  unreadText: {
-    color: 'white',
-    fontWeight: '600',
-    fontSize: 10
-  }
-});
 
 export default Header
