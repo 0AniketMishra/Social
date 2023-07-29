@@ -11,7 +11,7 @@ import {
   Dimensions,
   Pressable 
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback,memo,useMemo } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -26,34 +26,29 @@ import { Entypo } from '@expo/vector-icons';
 
 
 const Post = ({ post }) => {
-  const [data, setData] = useState([]);
   const navigation = useNavigation();
   const { user } = useAuth();
-  const route = useRoute()
-  const [comments, setComments] = useState(false);
   const [text, onChangeText] = useState("");
   const [userInfo, setUserInfo] = useState([]);
   const [postInfo, setPostInfo] = useState([])
   const [ReplyModal, setReplyModal] = useState(false);
-  const [followers, setFollowers] = useState([])
-  const [following, setFollowing] = useState([])
   const [tempdata, setTempData] = useState([])
+  const[like,setLike] = useState(false)
 
   const dimensions = Dimensions.get('window');
 
-  const handleLike = (post) => {
+  const handleLike = useCallback(() => {
+    setLike(true)
     post.likes.push(user.email)
     axios.post('https://social-backend-three.vercel.app/likepost', {email: user.email, postid: post._id})
-   
-   
-  };
+  });
 
-  const handleUnlike = (post) => {
-    post.likes?.pop()
+
+  const handleUnlike = useCallback(() => {
+    setLike(false)
+    post.likes.pop(user.email)
     axios.post('https://social-backend-three.vercel.app/unlikepost', {email: user.email, postid: post._id})
-  
-
- };
+ })
 
   const handleSubmit = async () => {
 
@@ -78,7 +73,7 @@ const Post = ({ post }) => {
           setTempData(data.savedUser)
         }
       })
-  })
+  },[])
 
 
 
@@ -118,7 +113,7 @@ const Post = ({ post }) => {
           text={text}
           onChangeText={onChangeText}
           setPostInfo={setPostInfo}
-
+          like={like}
         />
 
       </View>
@@ -141,12 +136,7 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata 
           style={{marginLeft: 10, fontWeight: "bold", fontSize: 14.5 }}
           onPress={() =>
             navigation.navigate("UserProfile", {
-              username: tempdata.username,
-              lowerUsername: tempdata.lowerUsername,
-              profile: tempdata.profile,
-              email: post.email,
-              about: '',
-              _id: tempdata._id
+            userdata: tempdata
             })
           }
         >
@@ -181,12 +171,8 @@ const PostBody = ({ post, navigation, user, dimensions, tempdata }) => (
 
     }}
       onPress={() => navigation.navigate("UserPost", {
-        username: tempdata.username,
-        lowerUsername: tempdata.lowerUsername,
-        profile: tempdata.profilePicture,
-        posttext: post.posttext,
-        image1: post.image1,
-        image2: post.image2
+      post: post,
+      tempdata: tempdata
 
       })}
     >
@@ -299,7 +285,9 @@ const PostFooter = ({
   userInfo,
   setReplyModal,
   ReplyModal,
-  handleUnlike
+  handleUnlike, 
+  like, 
+  setLike
 }) => (
   <View style={{
     marginLeft: 10, marginRight: 10, marginBottom: 4, borderTopColor: '#E9E9E9',
@@ -320,7 +308,7 @@ const PostFooter = ({
     >
      
 
-{post.likes.includes(user.email) ? (
+{like == true || post.likes.includes(user.email) ? (
    <Pressable
    style={{ flexDirection: "row", padding: 4, alignItems: 'center' }}
    onPress={() => handleUnlike(post)}
@@ -334,7 +322,7 @@ const PostFooter = ({
 ) : (
   <Pressable
   style={{ flexDirection: "row", padding: 4, alignItems: 'center' }}
-  onPress={() => handleLike(post)}
+  onPress={() => handleLike()}
 >
 <Ionicons name="heart-outline" size={21} color="#919191" />
 
@@ -410,4 +398,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Post;
+export default memo(Post)

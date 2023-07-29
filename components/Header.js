@@ -6,6 +6,7 @@ import firebase from '../firebase'
 import { Ionicons } from '@expo/vector-icons';
 import useAuth from '../hooks/useAuth';
 import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Header = () => {
     const navigation = useNavigation()
@@ -25,7 +26,7 @@ const Header = () => {
             <View style={{ justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', }}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}} onPress={logout}>
                     <Image style={{ width: 50, height: 50 }} source={{ uri: 'https://th.bing.com/th/id/R.3d74e8bfd4ef7985f7529bb9f7650eca?rik=RCvdo0dDvjxCWg&riu=http%3a%2f%2fwww.stickpng.com%2fassets%2fimages%2f580b57fcd9996e24bc43c53e.png&ehk=%2fkYf7%2bIY6TUkpUQzwclpivMLQ8ynEgcZYehDGOzbu0E%3d&risl=&pid=ImgRaw&r=0' }} />
-                    {route.name == "ProfileNavigation" ? (
+                    {route.name === "Profile" ? (
            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={{fontSize: 16, fontWeight: 'bold', textDecorationLine: 'underline',lineHeight: 20 }}>{userdata.lowerUsername}</Text>
                 <Entypo name="chevron-down" size={24} color="white" />

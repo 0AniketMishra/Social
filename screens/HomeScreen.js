@@ -27,6 +27,7 @@ const HomeScreen = () => {
   })
   
   },[])
+
   useEffect(() => {
     const fun = async () => {
       await AsyncStorage.setItem('user', JSON.stringify(user))
@@ -34,7 +35,17 @@ const HomeScreen = () => {
    
     }
   })
-  
+  const handleScroll = () => {
+    // try{
+    //   axios.post('https://social-backend-three.vercel.app/allposts', {})
+    // .then(function (response) {
+    //   Array.prototype.push.apply(posts,response.data.post)
+    // })
+    // } catch(err){
+    //   console.log(err)
+    // }
+  //  Array.prototype.push.apply(posts,[{"__v": 4, "_id": "64c4906c966ae0be5cc3c4534", "email": "a@gmail.com", "image1": "https://firebasestorage.googleapis.com/v0/b/social-368115.appspot.com/o/This%20is%20what%20i%20am%20reading%20now?alt=media&token=1607cf99-3265-40aa-bfd8-a17849a271dd", "image2": "https://firebasestorage.googleapis.com/v0/b/social-368115.appspot.com/o/This%20is%20what%20i%20am%20reading%20now2?alt=media&token=0dcbaf9d-71da-410b-8c70-5b8acde7d97f", "image3": "", "image4": "", "likes": [], "posttext": "This is what i am reading now", "replyingEmail": "", "replyingOn": "none", "replyingTo": "none"}])
+  }
   const handleRefresh = () => {
     setIsRefreshing(true) 
     axios.post('https://social-backend-three.vercel.app/allposts', {})
@@ -54,7 +65,7 @@ const HomeScreen = () => {
            />
 
       <Header/>
-       <ScrollView refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh}/>}>
+       <ScrollView onScroll={handleScroll} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh}/>}>
         <Stories />
         <View style={{marginTop: 3, marginBottom: 80}}>
        {posts.map((post,_id) => (

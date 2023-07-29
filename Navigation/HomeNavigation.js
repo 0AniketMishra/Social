@@ -24,7 +24,7 @@ const HomeNavigation = () => {
        }else if("Plus".includes(getFocusedRouteNameFromRoute(route))){
         navigation.setOptions({tabBarStyle: {display: 'none'}});
 
-       }else if("Message".includes(getFocusedRouteNameFromRoute(route))){
+       }else if("UserPost".includes(getFocusedRouteNameFromRoute(route))){
         navigation.setOptions({tabBarStyle: {display: 'none'}});
 
        }
