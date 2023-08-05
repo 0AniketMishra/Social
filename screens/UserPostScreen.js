@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, ScrollView, Dimensions,Pressable } from 'react-native'
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Post from '../components/Post';
@@ -12,6 +12,25 @@ const UserPostScreen = () => {
   const route = useRoute()
   const navigation = useNavigation()
   const { post,tempdata} = route.params
+  const [replies, setReplies] = useState(null)
+useEffect(() => {
+
+    fetch('https://social-backend-three.vercel.app/getreplies', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+
+  },
+  body: JSON.stringify({
+    _id: post._id 
+  })
+})
+  .then(res => res.json())
+  .then(async data => {
+      setReplies(data.post)
+  })
+ 
+})
   const dimensions = Dimensions.get('window');
   return (
     <View style={{flex: 1,backgroundColor: 'white'}}>
@@ -37,13 +56,14 @@ const UserPostScreen = () => {
    </View>
   
   <View>
-   
-  <View style={{}}>
-  <Reply post={post}/>
-    <Reply post={post}/>
-    <Reply post={post}/>
-    <Reply post={post}/>
-  </View>
+{replies !=null &&(
+     
+     <View style={{marginBottom: 50}}>
+     {replies.map((reply,_id) => (
+          <Reply post={reply} key={_id} />
+      ))}
+     </View>
+)}
   
 
   </View>

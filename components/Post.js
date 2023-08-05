@@ -2,7 +2,7 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity,
+  TouchableOpacity, 
   TextInput,
   Modal,
   StyleSheet,
@@ -36,7 +36,7 @@ const Post = ({ post }) => {
   const [replydata, setReplyData] = useState([])
   const [replypost, setReplyPost] = useState([])
   const[like,setLike] = useState(false)
-
+const [replies, setReplies] = useState([])
   const route = useRoute()
   const dimensions = Dimensions.get('window');
 
@@ -78,6 +78,7 @@ const Post = ({ post }) => {
       })
 
       if(post.replyingEmail != ""){
+
         fetch('https://social-backend-three.vercel.app/userdata', {
     method: 'POST',
     headers: {
@@ -111,6 +112,20 @@ const Post = ({ post }) => {
         setReplyPost(data.post)
 
     })
+    fetch('https://social-backend-three.vercel.app/getreplies', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+
+    },
+    body: JSON.stringify({
+      _id: post._id 
+    })
+  })
+    .then(res => res.json())
+    .then(async data => {
+        setReplies(data.post)
+    })
 
       }
   },[])
@@ -142,7 +157,7 @@ const Post = ({ post }) => {
         {/* background #F9FFFF was used previously */}
 
         <PostHeader post={post} navigation={navigation} userInfo={userInfo} tempdata={tempdata} />
-        <PostBody post={post} route={route} navigation={navigation} user={user} dimensions={dimensions} tempdata={tempdata} replydata={replydata} replypost={replypost}/>
+        <PostBody post={post} route={route}  navigation={navigation} user={user} dimensions={dimensions} tempdata={tempdata} replydata={replydata} replypost={replypost}/>
         <PostFooter
           post={post}
           handleLike={handleLike}
@@ -196,7 +211,7 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata,
     </View>
   </View>
 );
-const PostBody = ({ post, navigation, user, dimensions, tempdata,replydata,replypost, route }) => (
+const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replypost, route }) => (
 
 
 
@@ -212,7 +227,8 @@ const PostBody = ({ post, navigation, user, dimensions, tempdata,replydata,reply
     }}
       onPress={() => navigation.navigate("UserPost", {
       post: post,
-      tempdata: tempdata
+      tempdata: tempdata, 
+   
 
       })}
     >
@@ -221,8 +237,8 @@ const PostBody = ({ post, navigation, user, dimensions, tempdata,replydata,reply
     {post.replyingEmail != "" && route.name != "UserPost" &&(
            <Pressable onPress={() => navigation.navigate("UserPost", {
             post: post,
-            tempdata: tempdata
-      
+            tempdata: tempdata,
+  
             })} style={{margin: 4}}>
           <View style={{  flexDirection: 'row', padding: 7, borderRadius: 12,backgroundColor: '#F8F8F8' }}>
                    <View>
