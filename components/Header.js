@@ -3,10 +3,10 @@ import React from 'react'
 import { Entypo } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import firebase from '../firebase'
-import { Ionicons } from '@expo/vector-icons';
 import useAuth from '../hooks/useAuth';
-import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Feather } from '@expo/vector-icons';
+
 
 const Header = () => {
     const navigation = useNavigation()
@@ -39,13 +39,13 @@ const Header = () => {
                 </View>
                 <View style={{ flexDirection: 'row',justifyContent: 'center',padding: 4, marginLeft: 4}}>
                 <TouchableOpacity style={{ width: 40, height: 40, backgroundColor: '#F5F5F5', borderRadius: 24, alignItems: 'center', justifyContent: 'center'}} onPress={() => navigation.navigate("Plus")}>
-                <AntDesign name="plus" size={24} color="black" />
+                <Feather name="plus" size={24} color="black" />
                 </TouchableOpacity>
                 <TouchableOpacity style={{marginLeft: 6, width: 40, height: 40, backgroundColor: '#F5F5F5', borderRadius: 24, alignItems: 'center', justifyContent: 'center'}} onPress={() => navigation.navigate('Search')}>
-                <Ionicons  name="search" size={26} color="black" />
+                <Feather name="search" size={24} color="black" />
                 </TouchableOpacity>
                 <TouchableOpacity style={{marginLeft: 6, width: 40, height: 40, backgroundColor: '#F5F5F5', borderRadius: 24, alignItems: 'center', justifyContent: 'center'}} onPress={() => navigation.navigate('Search')}>
-                <Ionicons name="notifications-outline" size={26} color="black" />
+                <Feather name="bell" size={24} color="black" />
                 </TouchableOpacity>
                 </View>
             </View>

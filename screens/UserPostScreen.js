@@ -5,6 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import Post from '../components/Post';
 import { Feather } from '@expo/vector-icons';
 import Reply from '../components/Reply';
+import ReplyScreen from './ReplyScreen';
 
 
 const UserPostScreen = () => {
@@ -31,27 +32,28 @@ const UserPostScreen = () => {
           <Ionicons name="md-ellipsis-vertical-sharp" size={22} color="black" />
           </View>
         </View>
-   <View style={{borderBottomWidth: 1,borderBottomColor: 'grey'}}>
+   <View style={{borderBottomWidth: 1,borderBottomColor: '#DCDCDC'}}>
    <Post  post={post} style={{elevation: 4}}/>
    </View>
   
   <View>
+   
+  <View style={{}}>
   <Reply post={post}/>
     <Reply post={post}/>
     <Reply post={post}/>
     <Reply post={post}/>
-    <View style={{ borderLeftWidth: 2, borderLeftColor: 'grey', position: 'absolute', left: 30,top: 15, }}>
-                <Text style={{ color: 'white', flex: 1, height: 4000}}></Text>
-            </View>
   </View>
   
 
+  </View>
+ 
 
     
      </ScrollView>
 
 
-     <Pressable style={{backgroundColor: 'white',padding: 8,position: 'absolute',bottom: 0,right:0,left:0 }}>
+     <Pressable onPress={() => {navigation.navigate('Reply',{post:post,info: tempdata})}} style={{backgroundColor: '#F8F8F8',padding: 4,borderTopWidth: 1,borderTopColor: '#DCDCDC',position: 'absolute',bottom: 0,right:0,left:0 }}>
 
 <View style={{flexDirection: 'row', alignItems: 'center'}}>
   <View>

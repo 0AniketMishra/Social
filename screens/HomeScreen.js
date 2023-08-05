@@ -67,7 +67,7 @@ const HomeScreen = () => {
       <Header/>
        <ScrollView onScroll={handleScroll} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh}/>}>
         <Stories />
-        <View style={{marginTop: 3, marginBottom: 80}}>
+        <View style={{ marginBottom: 80}}>
        {posts.map((post,_id) => (
        <Post post={post} key={_id} />
 ))}

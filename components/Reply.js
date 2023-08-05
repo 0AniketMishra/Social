@@ -25,7 +25,7 @@ import {
   import { Entypo } from '@expo/vector-icons';
   
   
-  const Reply = ({ post }) => {
+  const Reply = ({ post, }) => {
     const navigation = useNavigation();
     const { user } = useAuth();
     const [text, onChangeText] = useState("");
@@ -98,7 +98,7 @@ import {
             </View>
           </View>
         </Modal>
-        <View style={{ marginTop: 4, borderRadius: 6, backgroundColor: 'white', padding: 2 }}>
+        <View style={{  borderRadius: 6, backgroundColor: 'white', padding: 2 }}>
           {/* background #F9FFFF was used previously */}
   
           <PostHeader post={post} navigation={navigation} userInfo={userInfo} tempdata={tempdata} />
@@ -115,25 +115,27 @@ import {
             setPostInfo={setPostInfo}
             like={like}
           />
-  
+  <View style={{ borderLeftWidth: 1.4, borderLeftColor: '#C2C2C2', left: 25,top: 15,zIndex: 4,position: 'absolute',zIndex: 1 }}>
+                <Text style={{ color: 'white', height: 4000}}></Text>
+            </View>
         </View>
       </View>
     );
   };
   const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata }) => (
     <View
-      style={{ justifyContent: "space-between", flexDirection: "row", margin: 5, zIndex: -1 }}
+      style={{ justifyContent: "space-between", flexDirection: "row", margin: 4,  }}
     >
-      <View style={{ flexDirection: "row", alignItems: "center", marginTop: 3,}}>
-        <View>
+      <View style={{ flexDirection: "row", alignItems: "center", marginTop: 3}}>
+        <View style={{zIndex: 2}}>
           <Image
-            style={{ width: 46, height: 46, borderRadius: 50, marginLeft: 4, }}
+            style={{ width: 42, height: 42, borderRadius: 50, }}
             source={{ uri: tempdata.profile ? tempdata.profile : 'https://pbs.twimg.com/profile_banners/44196397/1576183471/600x200' }}
           />
         </View>
         <View>
           <Text
-            style={{marginLeft: 8, fontWeight: "bold", fontSize: 14.5 }}
+            style={{marginLeft: 5, fontWeight: "bold", fontSize: 14 }}
             onPress={() =>
               navigation.navigate("UserProfile", {
               userdata: tempdata
@@ -144,7 +146,7 @@ import {
           </Text>
           <View style={{ flexDirection: "row", alignItems: 'center' }}>
   
-            <Text style={{ marginLeft: 8, fontSize: 13 }}>{tempdata.lowerUsername} • 2 hours ago</Text>
+            <Text style={{ marginLeft: 5, fontSize: 12.5 }}>{tempdata.lowerUsername} • 2 hours ago</Text>
           </View>
         </View>
       </View>
@@ -158,16 +160,11 @@ import {
   );
   const PostBody = ({ post, navigation, user, dimensions, tempdata }) => (
   
-  
-  
-  
-  
-    <View >
-  
+    <View style={{}} >
       <TouchableOpacity style={{
-        marginLeft: 60,
+        paddingLeft: 52,
         marginRight: 15,
-        marginTop: 6,
+        marginTop: 3, 
   
       }}
         onPress={() => navigation.navigate("UserPost", {
@@ -176,25 +173,29 @@ import {
   
         })}
       >
-        <Text style={{ fontSize: 15, fontWeight: "400", marginBottom: 10, fontFamily: 'Roboto' }}>{post.posttext} </Text>
+        <Text style={{ fontSize: 14.8, fontWeight: "400", fontFamily: 'Roboto' }}>{post.posttext} </Text>
       </TouchableOpacity>
       <View >
-        <ScrollView horizontal={true} >
-          <View style={{ justifyContent: 'center',marginLeft: 55 }}>
+        {post.image1 &&(
+          <ScrollView horizontal={true} style={{marginLeft: 52,marginTop: 9}}>
+          <View style={{ justifyContent: 'center',}}>
+
+
             {post.image1 && (
               <>
                 <Image
                   style={{
-                    width: dimensions.width - 80,
-                    height: dimensions.width - 80,
-                    marginLeft: 8,
+                    width: dimensions.width - 68,
+                    height: dimensions.width - 68,
+                    marginLeft: 4,
                     marginRight: 8,
                     borderRadius: 10,
-                    marginBottom: 6
+                    marginBottom: 6,
+                 
                   }}
                   source={{ uri: post.image1 }}
                 />
-                <View style={{ position: 'absolute', zIndex: 100, right: 14, top: 8, justifyContent: 'center' }}>
+                <View style={{ position: 'absolute', right: 14, top: 14, justifyContent: 'center' }}>
                   <Text style={{ backgroundColor: 'black', borderRadius: 6, color: 'white', paddingLeft: 5, paddingRight: 5, fontSize: 12 }}>{post.image2 ? "1/2" : "1/1"}</Text>
                 </View>
               </>
@@ -205,22 +206,23 @@ import {
               <>
                 <Image
                   style={{
-                    width: dimensions.width - 80,
-                    height: dimensions.width - 80,
-                    marginLeft: 8,
+                    width: dimensions.width - 68,
+                    height: dimensions.width - 68,
+             
                     marginRight: 8,
                     borderRadius: 10,
                     marginBottom: 6
                   }}
                   source={{ uri: post.image2 }}
                 />
-                <View style={{ position: 'absolute', zIndex: 100, right: 16, top: 8 }}>
+                <View style={{ position: 'absolute', zIndex: 100, right: 16, top: 14 }}>
                   <Text style={{ backgroundColor: 'black', borderRadius: 6, color: 'white', paddingLeft: 5, paddingRight: 5, fontSize: 12 }}>2/2</Text>
                 </View>
               </>
             )}
           </View>
         </ScrollView>
+        )}
       </View>
   
       <View
@@ -290,7 +292,7 @@ import {
     setLike
   }) => (
     <View style={{
-      marginLeft: 57, marginRight: 10,  flexDirection: 'row', alignItems: 'center'
+    marginLeft: 50, marginRight: 10,  flexDirection: 'row', alignItems: 'center'
     }}>
       <View
         style={{
@@ -298,7 +300,6 @@ import {
           alignItems: 'center',
           marginLeft: 4,
           marginRight: 4,
-          marginBottom: 4,
           width: "auto",
           justifyContent: 'center',
   

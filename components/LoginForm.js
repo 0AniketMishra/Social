@@ -73,7 +73,7 @@ const LoginForm = () => {
                           styles.inputField,
                           {
                               borderColor:
-                                  values.password.length  || values.password.length > 6 
+                                  values.password.length < 1 || values.password.length > 6 
                                       ? '#ccc'
                                       : 'red'
                           }

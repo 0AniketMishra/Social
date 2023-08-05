@@ -1,33 +1,31 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Pressable, ScrollView, ActivityIndicator } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { MaterialIcons } from '@expo/vector-icons';
 import firebase from '.././firebase';
-import { onSnapshot, query, doc, collection, where, updateDoc } from 'firebase/firestore'
 import { useNavigation } from '@react-navigation/native';
 import useAuth from '../hooks/useAuth';
 import * as ImagePicker from 'expo-image-picker';
-import { uploadBytes, ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 import { Entypo } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+
 
 const PlusBody = () => {
   const navigation = useNavigation()
   const { user } = useAuth()
+  const {userdata} = useAuth()
   const [loading, setLoading] = useState(false)
   const [text, onChangeText] = useState("");
-  const [userInfo, setUserInfo] = useState([])
   const [localImg, setLocalImg] = useState('')
   const [localImg2, setLocalImg2] = useState('')
   const [image, setImage] = useState("");
   const [image2, setImage2] = useState("");
   const [image3, setImage3] = useState("");
   const [image4, setImage4] = useState("");
-
-  const [uri, setUri] = useState("")
+  const [emojibox, setEmojieBox] = useState(false)
+  const refInput = useRef(null);
+  const [emojies, setEmojies] = useState([{id: 1, value: "👍"},{id: 2,value: "❤️"},{id: 3,value: "🙏" },{id: 4, value:"😀"},{id: 5, value: "😁"},{id: 6, value: "😂"}])
 
   const uploadImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
@@ -106,45 +104,39 @@ const PlusBody = () => {
 
     <ScrollView style={{}}>
       <View style={{}}>
-        {/* <View style={{ justifyContent: 'space-between', flexDirection: 'row',backgroundColor: 'white'}}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 6 }}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Entypo name="chevron-left" size={24} color="black" />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', }}>
-              <Image style={{ width: 30, height: 30, borderRadius: 50,marginRight: 2 }} source={{ uri: 'https://lh3.googleusercontent.com/a/AItbvmld8x4l-U0o2L28Ipg6VMny5NvPVM0sOjiqjlT8=s96-c' }} />
-              <View style={{ flexDirection: 'row', paddingLeft: 6, paddingRight: 2, paddingBottom: 2, width: 80, justifyContent: 'center',alignItems: 'center' }}>
-                <Text style={{ fontSize: 13, fontWeight: '600', color: '#0096F6', }}>Everyone</Text>
-                <Ionicons name="chevron-down" size={16} color="#0096F6" style={{ marginLeft: 2 }} />
-              </View>
-
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Pressable style={styles.button} onPress={SubmitPost}>
-              <Text style={styles.buttonText} >Post</Text>
-            </Pressable>
-          </View>
-        </View> */}
+       
         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: 'white' }}>
-          <View>
+        {/* <View>
             <TouchableOpacity onPress={() => navigation.goBack()}>
 
               < Entypo name="chevron-left" size={24} color="black" />
             </TouchableOpacity>
-          </View>
-          <View>
+           </View>
+           <View>
             <Image
-              style={{ width: 34, height: 34, borderRadius: 50, }}
-              source={{ uri: "https://lh3.googleusercontent.com/a/AItbvmld8x4l-U0o2L28Ipg6VMny5NvPVM0sOjiqjlT8=s96-c" }}
+              style={{ width: 39, height: 39, borderRadius: 50, }}
+              source={{ uri: userdata.profile ? userdata.profile : '' }}
             />
-          </View>
-          <View style={{ marginLeft: 6, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 14, fontWeight: "bold" }}>Everyone</Text>
+           </View>
+           <View style={{ marginLeft: 6, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontSize: 15, fontWeight: "bold" }}>Everyone</Text>
             <Ionicons name="chevron-down" size={16} color="black" style={{ marginLeft: 2 }} />
 
-            {/* <Text style={{ fontSize: 12, color: 'grey' }}>{lowerUsername}</Text> */}
+          </View> */}
+
+<TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={30} color="black" />
+            </TouchableOpacity>
+            <View>
+            <Image
+              style={{ width: 39, height: 39, borderRadius: 50, }}
+              source={{ uri: userdata.profile ? userdata.profile : '' }}
+            />
+           </View>
+           <View style={{ marginLeft: 6, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontSize: 15, fontWeight: "bold" }}>Everyone</Text>
+            <Ionicons name="chevron-down" size={16} color="black" style={{ marginLeft: 2 }} />
+
           </View>
           <Pressable style={styles.button} onPress={SubmitPost}>
             <Text style={styles.buttonText} >Post</Text>
@@ -162,34 +154,48 @@ const PlusBody = () => {
               <Ionicons name="ios-globe-outline" size={16} color="#0096F6" style={{ marginLeft: 2 }} />
               <Text style={{ color: '#0096F6', marginLeft: 2, alignItems: 'center', marginBottom: 4, fontWeight: '600' }}>Everyone can reply</Text>
             </View> */}
-            <View style={{ padding: 12, flexDirection: 'row', backgroundColor: 'white' }}>
+            <View style={{ padding: 8, flexDirection: 'row', backgroundColor: 'white', }}>
               <TouchableOpacity onPress={uploadImage} style={{}}>
-                <MaterialIcons name="image" size={24} color="#0078E9" style={{ marginLeft: 5, backgroundColor: '#D4E4F4', borderRadius: 18, padding: 5 }} />
+                <Feather name="image" size={24} color="#0078E9" style={{ marginLeft: 5,  borderRadius: 18, padding: 5 }} />
               </TouchableOpacity>
               <TouchableOpacity >
-                <MaterialIcons name="poll" size={24} color="#0078E9" style={{ marginLeft: 5, backgroundColor: '#D4E4F4', borderRadius: 18, padding: 5 }} />
+                <Feather name="bar-chart-2" size={24} color="#0078E9" style={{ marginLeft: 5,  borderRadius: 18, padding: 5 }} />
               </TouchableOpacity>
-              <TouchableOpacity >
-                <MaterialIcons name="emoji-emotions" size={24} color="#0078E9" style={{ marginLeft: 5, backgroundColor: '#D4E4F4', borderRadius: 18, padding: 5 }} />
+              <TouchableOpacity onPress={() => emojibox ? setEmojieBox(false) : setEmojieBox(true)}>
+                <Feather name="smile" size={24} color="#0078E9" style={{ marginLeft: 5,  borderRadius: 18, padding: 5 }} />
               </TouchableOpacity>
               <TouchableOpacity onPress={clickImage}>
-                <MaterialIcons name="my-location" size={24} color="#0078E9" style={{ marginLeft: 5, backgroundColor: '#D4E4F4', borderRadius: 18, padding: 5 }} />
+                <Feather name="map-pin" size={24} color="#0078E9" style={{ marginLeft: 5,  borderRadius: 18, padding: 5 }} />
               </TouchableOpacity>
             </View>
           </View>
+
+          {emojibox &&(
+           <View  style={{marginHorizontal: 16, marginVertical: 4,flexDirection: 'row', alignItems: 'center',}}>
+             {emojies.map((emoji) => (
+              <Pressable key={emoji.id} style={{margin: 2}} onPress={() => {onChangeText(text+emoji.value); refInput.current.focus()}}>
+              <Text style={{fontSize: 16}}>{emoji.value}</Text>
+            </Pressable>
+
+             ))}
+             </View>
+          )}
          <View style={{flexDirection: 'row', alignItems: 'center', backgroundColor: 'white',}}>
-          <Feather name="edit-3" size={24} color="black" style={{marginLeft: 6}}/>
          <TextInput
             style={styles.input}
             value={text}
+            ref={refInput}
             onChangeText={onChangeText}
             placeholder="Say Something..."
             multiline={true}
+            autoFocus={true}
+            
           />
+          
          </View>
         </View>
 
-        {image && !loading ? (
+        {/* {image && !loading ? (
           <View style={{ padding: 10, backgroundColor: 'white' }}>
             <ScrollView horizontal={true} >
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -203,21 +209,7 @@ const PlusBody = () => {
                     <Image source={{ uri: localImg2 }} style={{ width: 150, height: 150, borderRadius: 12 }} />
                   </TouchableOpacity>
                 )}
-                {image2 && (
-                  <TouchableOpacity onPress={() => setImage2(null)} style={{ marginLeft: 4 }}>
-                    <Image source={{ uri: localImg2 }} style={{ width: 150, height: 150, borderRadius: 12 }} />
-                  </TouchableOpacity>
-                )}
-                {image2 && (
-                  <TouchableOpacity onPress={() => setImage2(null)} style={{ marginLeft: 4 }}>
-                    <Image source={{ uri: localImg2 }} style={{ width: 150, height: 150, borderRadius: 12 }} />
-                  </TouchableOpacity>
-                )}
-                {image2 && (
-                  <TouchableOpacity onPress={() => setImage2(null)} style={{ marginLeft: 4 }}>
-                    <Image source={{ uri: localImg2 }} style={{ width: 150, height: 150, borderRadius: 12 }} />
-                  </TouchableOpacity>
-                )}
+                
 
               </View>
             </ScrollView>
@@ -239,6 +231,87 @@ const PlusBody = () => {
         ) : loading ? (
           <View style={{ margin: 4, width: 150, height: 150, borderRadius: 12, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
             <ActivityIndicator />
+          </View>
+        ) : (
+          null
+        )} */}
+
+
+
+
+{image && !loading ? (
+          <View style={{ padding: 10, backgroundColor: 'white' }}>
+            <ScrollView horizontal={true} >
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                {image && (
+                  <View>
+                    <TouchableOpacity>
+                      <Image source={{ uri: localImg }} style={{ margin: 2, width: 160, height: 160, borderRadius: 12 }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setImage2(null)} style={{ position: 'absolute', right: 0, margin: 6, backgroundColor: 'black', borderRadius: 23 }}>
+                      < Entypo name="cross" size={22} color="white" />
+                    </TouchableOpacity>
+                    <View style={{ position: 'absolute', bottom: 0, right: 0, margin: 6, backgroundColor: 'black', borderRadius: 23, padding: 4, paddingLeft: 10, paddingRight: 10 }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold' }}>Edit</Text>
+                      </View>
+                    </View>
+
+                  </View>
+
+                )}
+                {image2 && (
+                  <View style={{ marginLeft: 7 }}>
+                    <TouchableOpacity>
+                      <Image source={{ uri: localImg2 }} style={{ margin: 2, width: 160, height: 160, borderRadius: 12 }} />
+                    </TouchableOpacity >
+                    <TouchableOpacity onPress={() => setImage(null)} style={{ position: 'absolute', right: 0, margin: 6, backgroundColor: 'black', borderRadius: 23 }}>
+                      < Entypo name="cross" size={22} color="white" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ position: 'absolute', bottom: 0, right: 0, margin: 6, backgroundColor: 'black', borderRadius: 23, padding: 4, paddingLeft: 10, paddingRight: 10 }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold' }}>Edit</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+
+                )}
+                {image3 && (
+                  <TouchableOpacity onPress={() => setImage2(null)} style={{ marginLeft: 4 }}>
+                    <Image source={{ uri: localImg2 }} style={{ margin: 2, width: 175, height: 175, borderRadius: 12 }} />
+                  </TouchableOpacity>
+                )}
+                {image4 && (
+                  <TouchableOpacity onPress={() => setImage2(null)} style={{ marginLeft: 4 }}>
+                    <Image source={{ uri: localImg2 }} style={{ margin: 2, width: 175, height: 175, borderRadius: 12 }} />
+                  </TouchableOpacity>
+                )}
+                {image4 && (
+                  <TouchableOpacity onPress={() => setImage2(null)} style={{ marginLeft: 4 }}>
+                    <Image source={{ uri: localImg2 }} style={{ margin: 2, width: 175, height: 175, borderRadius: 12 }} />
+                  </TouchableOpacity>
+                )}
+
+              </View>
+            </ScrollView>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4, borderRadius: 10, justifyContent: 'center', paddingLeft: 8, paddingRight: 8 }}>
+                <Feather name="user-plus" size={18} color="#6F6F6F" />
+                <Text style={{ fontSize: 13, marginLeft: 4, color: "#6F6F6F", fontWeight: 'bold' }}>Tag People.</Text>
+              </View>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4, borderRadius: 10, marginLeft: 2, justifyContent: 'center', paddingLeft: 8, paddingRight: 8 }}>
+                <Feather name="edit" size={18} color="#6F6F6F" />
+                <Text style={{ fontSize: 13, marginLeft: 4, color: "#6F6F6F", fontWeight: 'bold' }}>Add Description.</Text>
+              </View>
+
+            </View>
+          </View>
+        ) : loading ? (
+          <View style={{ margin: 10, width: 175, height: 175, borderRadius: 12, backgroundColor: '#343434', alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator color="white" size={27} />
           </View>
         ) : (
           null
@@ -270,13 +343,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minHeight: 32,
     borderRadius: 24,
+   
     width: 64,
   },
   buttonText: {
     fontWeight: '600',
     color: '#fff',
     fontSize: 16,
-
+    fontWeight: 'bold',
   },
   profile: {
     width: 40,
@@ -285,10 +359,9 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
-    padding: 8,
-    marginRight: 22,
+    padding: 16,
     textAlignVertical: 'center',
-    minHeight: 60
+  
 
   },
 

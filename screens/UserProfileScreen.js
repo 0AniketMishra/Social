@@ -63,7 +63,7 @@ const handleUnfollow = () => {
           
          
          <View style={{ marginLeft: 6, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 18, fontWeight: "bold", }}>{userdata?.username}</Text>
+         <Text style={{ fontSize: 18, fontWeight: "bold", }}>{userdata?.username}</Text>
             {/* <Text style={{ fontSize: 12, color: 'grey' }}>{lowerUsername}</Text> */}
           </View>
           <View style={{marginRight: 10}}>

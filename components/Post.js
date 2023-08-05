@@ -33,8 +33,11 @@ const Post = ({ post }) => {
   const [postInfo, setPostInfo] = useState([])
   const [ReplyModal, setReplyModal] = useState(false);
   const [tempdata, setTempData] = useState([])
+  const [replydata, setReplyData] = useState([])
+  const [replypost, setReplyPost] = useState([])
   const[like,setLike] = useState(false)
 
+  const route = useRoute()
   const dimensions = Dimensions.get('window');
 
   const handleLike = useCallback(() => {
@@ -73,6 +76,43 @@ const Post = ({ post }) => {
           setTempData(data.savedUser)
         }
       })
+
+      if(post.replyingEmail != ""){
+        fetch('https://social-backend-three.vercel.app/userdata', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+
+    },
+    body: JSON.stringify({
+      email: post?.replyingEmail
+    })
+  })
+    .then(res => res.json())
+    .then(async data => {
+      if (data.message == "User Found") {
+        setReplyData(data.savedUser)
+      }
+    })
+
+
+    fetch('https://social-backend-three.vercel.app/postdata', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+
+    },
+    body: JSON.stringify({
+      postId: post?.replyingTo
+    })
+  })
+    .then(res => res.json())
+    .then(async data => {
+        setReplyPost(data.post)
+
+    })
+
+      }
   },[])
 
 
@@ -102,7 +142,7 @@ const Post = ({ post }) => {
         {/* background #F9FFFF was used previously */}
 
         <PostHeader post={post} navigation={navigation} userInfo={userInfo} tempdata={tempdata} />
-        <PostBody post={post} navigation={navigation} user={user} dimensions={dimensions} tempdata={tempdata} />
+        <PostBody post={post} route={route} navigation={navigation} user={user} dimensions={dimensions} tempdata={tempdata} replydata={replydata} replypost={replypost}/>
         <PostFooter
           post={post}
           handleLike={handleLike}
@@ -120,7 +160,7 @@ const Post = ({ post }) => {
     </View>
   );
 };
-const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata }) => (
+const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata, replypost}) => (
   <View
     style={{ justifyContent: "space-between", flexDirection: "row", margin: 5 }}
   >
@@ -156,7 +196,7 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata 
     </View>
   </View>
 );
-const PostBody = ({ post, navigation, user, dimensions, tempdata }) => (
+const PostBody = ({ post, navigation, user, dimensions, tempdata,replydata,replypost, route }) => (
 
 
 
@@ -178,6 +218,27 @@ const PostBody = ({ post, navigation, user, dimensions, tempdata }) => (
     >
       <Text style={{ fontSize: 15, fontWeight: "400", marginBottom: 10, fontFamily: 'Roboto' }}>{post.posttext} </Text>
     </TouchableOpacity>
+    {post.replyingEmail != "" && route.name != "UserPost" &&(
+           <Pressable onPress={() => navigation.navigate("UserPost", {
+            post: post,
+            tempdata: tempdata
+      
+            })} style={{margin: 4}}>
+          <View style={{  flexDirection: 'row', padding: 7, borderRadius: 12,backgroundColor: '#F8F8F8' }}>
+                   <View>
+                       <Image
+                           style={{ width: 40, height: 40, borderRadius: 50, }}
+                           source={{ uri: replydata?.profile }}
+                       />
+                   </View>
+                   <View style={{ marginLeft: 10, marginRight: 10,flex: 1 }}>
+                   {/* */}
+                       <Text style={{  marginRight: 18 }}>{replydata?.username}</Text>
+                       <Text numberOfLines={2} style={{  marginRight: 18 }}>{replypost.map(post => post.posttext)}</Text>
+                   </View> 
+               </View>
+         </Pressable>
+         )}
     <View >
       <ScrollView horizontal={true} >
         <View style={{ justifyContent: 'center' }}>

@@ -9,6 +9,7 @@ import UserPostScreen from '../screens/UserPostScreen';
 import SearchScreen from '../screens/SearchScreen';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import ReplyScreen from '../screens/ReplyScreen';
 
 
 const HomeNavigation = () => {
@@ -27,6 +28,9 @@ const HomeNavigation = () => {
        }else if("UserPost".includes(getFocusedRouteNameFromRoute(route))){
         navigation.setOptions({tabBarStyle: {display: 'none'}});
 
+       }else if("Reply".includes(getFocusedRouteNameFromRoute(route))){
+        navigation.setOptions({tabBarStyle: {display: 'none'}});
+
        }
         else {
        navigation.setOptions({tabBarStyle: {display: 'flex'}});
@@ -42,6 +46,8 @@ const HomeNavigation = () => {
             <Stack.Screen name="UserPost" component={UserPostScreen}  />
             <Stack.Screen name="Search" component={SearchScreen}  />
             <Stack.Screen name="Message" component={Message}  />
+            <Stack.Screen name="Reply" component={ReplyScreen}  />
+
     </Stack.Navigator>
   )
 }

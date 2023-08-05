@@ -117,8 +117,8 @@ const StackNavigator = () => {
           </>
             ) : (
               <>
-          <Stack.Screen name="Login" component={LoginScreen}/>
-          <Stack.Screen name="Signup" component={SignupScreen}/>
+          <Stack.Screen name="Login" component={LoginScreen} options={{tabBarStyle: {display: 'none'}}}/>
+          <Stack.Screen name="Signup" component={SignupScreen} options={{tabBarStyle: {display: 'none'}}}/>
           </>
           )}
           </Stack.Navigator>
