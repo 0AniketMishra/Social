@@ -60,6 +60,8 @@ const [replies, setReplies] = useState([])
  
   useEffect(() => {
 
+    console.log(post)
+    console.log(replypost)
     fetch('https://social-backend-three.vercel.app/userdata', {
       method: 'POST',
       headers: {
@@ -109,7 +111,8 @@ const [replies, setReplies] = useState([])
   })
     .then(res => res.json())
     .then(async data => {
-        setReplyPost(data.post)
+        setReplyPost(data.post) 
+        
 
     })
     fetch('https://social-backend-three.vercel.app/getreplies', {
@@ -236,8 +239,8 @@ const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replyp
     </TouchableOpacity>
     {post.replyingEmail != "" && route.name != "UserPost" &&(
            <Pressable onPress={() => navigation.navigate("UserPost", {
-            post: post,
-            tempdata: tempdata,
+            post: replypost,
+            tempdata: replydata,
   
             })} style={{margin: 4}}>
           <View style={{  flexDirection: 'row', padding: 7, borderRadius: 12,backgroundColor: '#F8F8F8' }}>
@@ -250,7 +253,7 @@ const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replyp
                    <View style={{ marginLeft: 10, marginRight: 10,flex: 1 }}>
                    {/* */}
                        <Text style={{  marginRight: 18 }}>{replydata?.username}</Text>
-                       <Text numberOfLines={2} style={{  marginRight: 18 }}>{replypost.map(post => post.posttext)}</Text>
+                       <Text numberOfLines={2} style={{  marginRight: 18 }}>{replypost.posttext}</Text>
                    </View> 
                </View>
          </Pressable>
