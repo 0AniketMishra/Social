@@ -10,6 +10,7 @@ import { orderBy } from 'firebase/firestore'
 import useAuth from '../hooks/useAuth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
+import Reply from '../components/Reply'
 
 const HomeScreen = () => {
   const navigation = useNavigation()
@@ -22,10 +23,7 @@ const HomeScreen = () => {
   axios.post('https://social-backend-three.vercel.app/allposts', {})
   .then(function (response) {
     setPosts(response.data.post);
-    
-
   })
-  
   },[])
 
   useEffect(() => {
@@ -34,7 +32,7 @@ const HomeScreen = () => {
    
    
     }
-  })
+  },[])
   const handleScroll = () => {
     // try{
     //   axios.post('https://social-backend-three.vercel.app/allposts', {})
@@ -69,7 +67,7 @@ const HomeScreen = () => {
         <Stories />
         <View style={{ marginBottom: 80}}>
        {posts.map((post,_id) => (
-       <Post post={post} key={_id} />
+       <Reply post={post} key={_id}  />
 ))}
        </View>
 
@@ -82,7 +80,8 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
    
-     flex: 1
+     flex: 1,
+     backgroundColor: 'white'
   },
 });
 

@@ -26,6 +26,7 @@ import { Entypo } from '@expo/vector-icons';
 
 
 const Post = ({ post }) => {
+  
   const navigation = useNavigation();
   const { user } = useAuth();
   const [text, onChangeText] = useState("");
@@ -36,7 +37,10 @@ const Post = ({ post }) => {
   const [replydata, setReplyData] = useState([])
   const [replypost, setReplyPost] = useState([])
   const[like,setLike] = useState(false)
-const [replies, setReplies] = useState([])
+const [replies, setReplies] = useState(null)
+
+// console.log(post)
+
   const route = useRoute()
   const dimensions = Dimensions.get('window');
 
@@ -60,8 +64,6 @@ const [replies, setReplies] = useState([])
  
   useEffect(() => {
 
-    console.log(post)
-    console.log(replypost)
     fetch('https://social-backend-three.vercel.app/userdata', {
       method: 'POST',
       headers: {
@@ -84,7 +86,7 @@ const [replies, setReplies] = useState([])
         fetch('https://social-backend-three.vercel.app/userdata', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json', 
 
     },
     body: JSON.stringify({
@@ -133,7 +135,21 @@ const [replies, setReplies] = useState([])
       }
   },[])
 
-
+useEffect(() => {
+  fetch('https://social-backend-three.vercel.app/postdata', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      postId: post._id
+    })
+  })
+    .then(res => res.json())
+    .then(async data => {
+        let post = data
+    })
+})
 
   return (
     <View >
@@ -160,7 +176,7 @@ const [replies, setReplies] = useState([])
         {/* background #F9FFFF was used previously */}
 
         <PostHeader post={post} navigation={navigation} userInfo={userInfo} tempdata={tempdata} />
-        <PostBody post={post} route={route}  navigation={navigation} user={user} dimensions={dimensions} tempdata={tempdata} replydata={replydata} replypost={replypost}/>
+        <PostBody post={post} route={route} replies={replies}  navigation={navigation} user={user} dimensions={dimensions} tempdata={tempdata} replydata={replydata} replypost={replypost}/>
         <PostFooter
           post={post}
           handleLike={handleLike}
@@ -172,6 +188,7 @@ const [replies, setReplies] = useState([])
           onChangeText={onChangeText}
           setPostInfo={setPostInfo}
           like={like}
+          replies={replies}
         />
 
       </View>
@@ -214,7 +231,7 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata,
     </View>
   </View>
 );
-const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replypost, route }) => (
+const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replypost, route,replies }) => (
 
 
 
@@ -231,6 +248,7 @@ const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replyp
       onPress={() => navigation.navigate("UserPost", {
       post: post,
       tempdata: tempdata, 
+
    
 
       })}
@@ -241,6 +259,7 @@ const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replyp
            <Pressable onPress={() => navigation.navigate("UserPost", {
             post: replypost,
             tempdata: replydata,
+   
   
             })} style={{margin: 4}}>
           <View style={{  flexDirection: 'row', padding: 7, borderRadius: 12,backgroundColor: '#F8F8F8' }}>
@@ -367,7 +386,8 @@ const PostFooter = ({
   ReplyModal,
   handleUnlike, 
   like, 
-  setLike
+  setLike,
+  replies
 }) => (
   <View style={{
     marginLeft: 10, marginRight: 10, marginBottom: 4, borderTopColor: '#E9E9E9',
@@ -421,11 +441,8 @@ const PostFooter = ({
         }
       >
         <Ionicons name="chatbubble-outline" size={21} color="#595959" />
-        <Text style={{ marginLeft: 4, fontSize: 14, color: "#595959", marginRight: 4 }}>0 Replies</Text>
+        <Text style={{ marginLeft: 4, fontSize: 14, color: "#595959", marginRight: 4 }}>{!replies ? 0 : replies?.length} Replies</Text>
       </TouchableOpacity>
-
-
-
 
     </View>
     <Text style={{ flex: 1 }}></Text>

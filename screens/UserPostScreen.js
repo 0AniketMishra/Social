@@ -30,7 +30,7 @@ useEffect(() => {
       setReplies(data.post)
   })
  
-})
+},[])
   const dimensions = Dimensions.get('window');
   return (
     <View style={{flex: 1,backgroundColor: 'white'}}>
