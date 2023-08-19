@@ -5,11 +5,14 @@ import Header from '../components/Header'
 import Stories from '../components/Stories'
 import Post from '../components/Post'
 
+import { useNavigation } from '@react-navigation/native'
+
 
 const ProfileScreen = () => {
   const { userdata } = useAuth()
   const [currentTab, setCurrentTab] = useState("Posts")
   const [posts, setPosts] = useState({"__v": 19, "_id": "64ce265b5b34034419f9eb60", "email": "a@gmail.com", "image1": "", "image2": "", "image3": "", "image4": "", "likes": [], "posttext": "Another one is here", "replyingEmail": "a@gmail.com", "replyingOn": "64ce0427fe0b74889db07813", "replyingTo": "64ce0427fe0b74889db07813"})
+  const navigation = useNavigation()
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <ScrollView>
@@ -48,7 +51,7 @@ const ProfileScreen = () => {
             <Text style={{ fontSize: 15 }}>{userdata.descritption}</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 10 }}>
-            <Pressable titleSize={20} style={{ backgroundColor: '#F5F5F5', justifyContent: 'center', alignItems: 'center', borderRadius: 8, marginRight: 5, flex: 1, height: 34 }}>
+            <Pressable titleSize={20} style={{ backgroundColor: '#F5F5F5', justifyContent: 'center', alignItems: 'center', borderRadius: 8, marginRight: 5, flex: 1, height: 34 }} onPress={() => navigation.navigate("EditProfile")}>
               <Text style={{ fontWeight: 'bold',  fontSize: 14, }}>Edit Profile</Text>
             </Pressable>
             <Pressable titleSize={20} style={{ backgroundColor: '#F5F5F5', justifyContent: 'center', alignItems: 'center', borderRadius: 8, marginLeft: 5, flex: 1, height: 34 }}>

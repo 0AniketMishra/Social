@@ -77,7 +77,7 @@ const handleUnfollow = () => {
           <View style={{ marginLeft: 18 }}>
             <Image
               style={{ width: 84, height: 84, borderRadius: 50, }}
-              source={{ uri: userdata?.profile ? userdata?.profile : 'https://pbs.twimg.com/profile_banners/44196397/1576183471/600x200' }}
+              source={{ uri: userdata?.profile ? userdata?.profile : 'https://th.bing.com/th/id/OIP.gtYDGnVfcJH3fx8d7M0AfwAAAA?pid=ImgDet&rs=1' }}
             />
             {/* <Text style={{color: 'white', marginTop: 10, fontSize: 15}}>{userdata.username}</Text> */}
           </View>

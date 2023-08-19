@@ -26,7 +26,7 @@ const Stories = () => {
                    <TouchableOpacity key={info.id}>
                      <View style={{ alignItems: 'center', }} >
                     <View style={{ marginLeft: 6, marginRight: 6 }}>
-                        <View style={{ width: 54, height: 54, backgroundColor: 'white', borderRadius: 50, alignItems: "center", justifyContent: "center", }}>
+                        <View style={{ width: 54, height: 56, backgroundColor: 'white', borderRadius: 50, alignItems: "center", justifyContent: "center", }}>
                             <Image style={styles.story} source={{ uri: info?.profile }} />
   
                         </View>

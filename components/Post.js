@@ -273,7 +273,7 @@ const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replyp
                 source={{ uri: post.image1 }}
               />
               <View style={{ position: 'absolute', zIndex: 100, right: 14, top: 8, justifyContent: 'center' }}>
-                <Text style={{ backgroundColor: 'black', borderRadius: 6, color: 'white', paddingLeft: 5, paddingRight: 5, fontSize: 12 }}>{post.image2 ? "1/2" : "1/1"}</Text>
+                <Text style={{ backgroundColor: 'black', borderRadius: 8, color: 'white', paddingLeft: 6, paddingRight: 6, fontSize: 12,fontWeight: 'bold', alignItems: 'center',paddingBottom: 1 }}>{post.image2 ? "1/2" : "1/1"}</Text>
               </View>
             </>
           )}
@@ -293,7 +293,7 @@ const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replyp
                 source={{ uri: post.image2 }}
               />
               <View style={{ position: 'absolute', zIndex: 100, right: 16, top: 8 }}>
-                <Text style={{ backgroundColor: 'black', borderRadius: 6, color: 'white', paddingLeft: 5, paddingRight: 5, fontSize: 12 }}>2/2</Text>
+                <Text style={{  backgroundColor: 'black', borderRadius: 8, color: 'white', paddingLeft: 6, paddingRight: 6, fontSize: 12,fontWeight: 'bold', alignItems: 'center',paddingBottom: 1  }}>2/2</Text>
               </View>
             </>
           )}
@@ -416,7 +416,7 @@ const PostFooter = ({
         }
       >
         <Ionicons name="chatbubble-outline" size={21} color="#595959" />
-        <Text style={{ marginLeft: 4, fontSize: 14, color: "#595959", marginRight: 4 }}>{!replies ? 0 : replies?.length} Replies</Text>
+        <Text style={{ marginLeft: 4, fontSize: 14, color: "#595959", marginRight: 4 }}>{!replies ? 0 : replies?.length} Comments</Text>
       </TouchableOpacity>
 
     </View>

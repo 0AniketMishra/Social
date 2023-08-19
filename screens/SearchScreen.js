@@ -6,6 +6,7 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import UserList from '../components/UserList';
+import { Feather } from '@expo/vector-icons';
 
 const SearchScreen = () => {
   const route = useRoute()
@@ -20,11 +21,11 @@ const SearchScreen = () => {
     .then(function (response) {
       setData(response.data.user);
     })
-  }, []);
+  });
 
   useEffect(() => {
     fun1()
-  }, [])
+  },[])
   return (
     <View style={{ backgroundColor: 'white', flex: 1 }}>
      <View style={{}}>
@@ -34,7 +35,7 @@ const SearchScreen = () => {
 <Ionicons name="arrow-back" size={26} color="black" />
 </TouchableOpacity>
 
-<TextInput placeholder="  Search" style={{ flex: 1,backgroundColor: '#F5F5F5',padding: 4, borderRadius: 12,margin: 3 }}
+<TextInput placeholder="  Search Users, Places.." style={{ flex: 1,backgroundColor: '#F5F5F5',padding: 4, borderRadius: 12,margin: 3 }}
   onChangeText={(text) => {
     setKeyword(text)
 
@@ -43,7 +44,7 @@ const SearchScreen = () => {
   
 />
 <TouchableOpacity onPress={fun1}>
-  <Entypo name="magnifying-glass" size={24} color="black" />
+<Feather name="search" size={24} color="black" />
 </TouchableOpacity>
 
 

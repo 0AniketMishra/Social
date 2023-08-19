@@ -36,7 +36,7 @@ useEffect(() => {
     <View style={{flex: 1,backgroundColor: 'white'}}>
      <ScrollView>
 
-    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: 'white' }}>
+     <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: 'white' }}>
           <View>
             <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={30} color="black" />

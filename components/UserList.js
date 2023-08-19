@@ -15,10 +15,10 @@ const UserList = ({data}) => {
               }
             >
               <View>
-                <View style={{  borderRadius: 50 }}>
+                <View style={{  borderRadius: 50,width: 54, height: 54,alignItems: 'center', justifyContent: 'center' , borderWidth: 0.5, borderColor: 'grey'  }}>
                   <Image
-                    style={{ width: 52, height: 52, borderRadius: 50, paddingLeft: 4 }}
-                    source={{ uri: !user.profile ? "https://instagram.fdel25-4.fna.fbcdn.net/v/t51.2885-19/44884218_345707102882519_2446069589734326272_n.jpg?_nc_ht=instagram.fdel25-4.fna.fbcdn.net&_nc_cat=1&_nc_ohc=cuAabRYd6LoAX8H5kjd&edm=ACkRbIEBAAAA&ccb=7-5&ig_cache_key=YW5vbnltb3VzX3Byb2ZpbGVfcGlj.2-ccb7-5&oh=00_AfBUzEKoZ2tokTKSxPKzB4J8VBWQZQc_X3Bxqe4Fq_B3zw&oe=64A1864F&_nc_sid=cd0945" : user.profile }}
+                    style={{ width: 50, height: 50, borderRadius: 50, }}
+                    source={{ uri: !user.profile ? "https://th.bing.com/th/id/OIP.gtYDGnVfcJH3fx8d7M0AfwAAAA?pid=ImgDet&rs=1" : user.profile }}
                   />
                 </View>
               </View>
@@ -31,7 +31,7 @@ const UserList = ({data}) => {
 
                 <View style={{ marginLeft: 4 }}>
 
-                  <Text style={{ fontSize: 12, color: 'grey', }}>{user.lowerUsername}</Text>
+                  <Text style={{ fontSize: 12, color: 'black', }}>{user.lowerUsername}</Text>
                   <Text style={{ fontSize: 13, color: 'black', marginTop: 2, }}>{user.descritption}</Text>
 
                 </View>
