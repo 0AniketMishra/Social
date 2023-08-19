@@ -13,7 +13,7 @@ const Stories = () => {
     ])
   return (
      <View style={{ backgroundColor: 'white',}}>
-         <View style={{ marginBottom: 12,marginTop: 10, marginLeft: 5,  }}>
+         <View style={{ marginBottom: 12, marginTop:6, marginLeft: 5,  }}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <TouchableOpacity>
           <View style={{marginLeft: 4, marginRight: 4,  width: 54, height: 54, backgroundColor: '#D4E4F4', borderRadius: 50, alignItems: "center", justifyContent: "center", alignItems: 'center' }}>

@@ -50,9 +50,10 @@ const HomeScreen = () => {
   .then(function (response) {
     setPosts(response.data.post);
   })
-      setIsRefreshing(false)
+      setIsRefreshing(false) 
 
   }
+  
   return (
 
     <View style={styles.container}>
@@ -67,7 +68,7 @@ const HomeScreen = () => {
         <Stories />
         <View style={{ marginBottom: 80}}>
        {posts.map((post,_id) => (
-       <Reply post={post} key={_id}  />
+       <Post post={post} key={_id}  />
 ))}
        </View>
 

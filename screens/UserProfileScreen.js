@@ -15,7 +15,8 @@ const UserProfileScreen = () => {
     const {user} = useAuth()
   const { userdata } = route.params;
   const [currentTab, setCurrentTab] = useState("Posts") 
-  const [posts, setPosts] = useState({ "__v": 0, "_id": "649d0c31f332ee28bf2c19c4", "comments": [], "email": "a@gmail.com", "image1": "https://firebasestorage.googleapis.com/v0/b/social-368115.appspot.com/o/Bb?alt=media&token=8b2dce78-7b80-47a2-b098-9786cbf95082", "image2": "https://firebasestorage.googleapis.com/v0/b/social-368115.appspot.com/o/Bb2?alt=media&token=5a21f371-3fc0-43dc-bf9f-4473558ff5f8", "image3": "", "image4": "", "likes": [], "posttext": "A random picture of a project.. " })
+  const [posts, setPosts] = useState({"__v": 19, "_id": "64ce265b5b34034419f9eb60", "email": "a@gmail.com", "image1": "", "image2": "", "image3": "", "image4": "", "likes": [], "posttext": "Another one is here", "replyingEmail": "a@gmail.com", "replyingOn": "64ce0427fe0b74889db07813", "replyingTo": "64ce0427fe0b74889db07813"})
+ 
   const navigation = useNavigation()
   const [isFollowing,setIsFollowing] = useState(false)
 

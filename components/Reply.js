@@ -472,7 +472,7 @@ const Reply = ({ post, }) => {
  
 
 
- <View style={{
+<View style={{
     marginLeft: 44, marginRight: 10, flexDirection: 'row', alignItems: 'center'
   }}>
     <View

@@ -172,7 +172,7 @@ useEffect(() => {
           </View>
         </View>
       </Modal>
-      <View style={{ marginTop: 4, marginBottom: 4, borderRadius: 6, backgroundColor: 'white', padding: 2 }}>
+      <View style={{ borderRadius: 6, backgroundColor: 'white', padding: 2, borderBottomWidth: 0.5, borderWidthColor: 'grey' }}>
         {/* background #F9FFFF was used previously */}
 
         <PostHeader post={post} navigation={navigation} userInfo={userInfo} tempdata={tempdata} />
@@ -199,16 +199,16 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata,
   <View
     style={{ justifyContent: "space-between", flexDirection: "row", margin: 5 }}
   >
-    <View style={{ flexDirection: "row", alignItems: "center", marginTop: 3 }}>
-      <View>
+    <View style={{ flexDirection: "row", alignItems: "center",  }}>
+      <View style={{width: 50,marginLeft: 4 , height: 50, borderWidth: 0.5,borderColor: 'grey', alignItems: 'center',justifyContent: 'center',borderRadius: 44}}>
         <Image
-          style={{ width: 46, height: 46, borderRadius: 50, marginLeft: 4 }}
+          style={{ width: 44, height: 44, borderRadius: 50, }}
           source={{ uri: tempdata.profile ? tempdata.profile : 'https://pbs.twimg.com/profile_banners/44196397/1576183471/600x200' }}
         />
       </View>
       <View>
         <Text
-          style={{marginLeft: 10, fontWeight: "bold", fontSize: 14.5 }}
+          style={{marginLeft: 6, fontWeight: "bold", fontSize: 14.5 }}
           onPress={() =>
             navigation.navigate("UserProfile", {
             userdata: tempdata
@@ -219,7 +219,7 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata,
         </Text>
         <View style={{ flexDirection: "row", alignItems: 'center' }}>
 
-          <Text style={{ marginLeft: 10, fontSize: 13 }}>{tempdata.lowerUsername} • 2 hours ago</Text>
+          <Text style={{ marginLeft: 6, fontSize: 13 }}>{tempdata.lowerUsername} • 2 hours ago</Text>
         </View>
       </View>
     </View>
@@ -253,30 +253,9 @@ const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replyp
 
       })}
     >
-      <Text style={{ fontSize: 15, fontWeight: "400", marginBottom: 10, fontFamily: 'Roboto' }}>{post.posttext} </Text>
+      <Text style={{ fontSize: 15, fontWeight: "400", marginBottom: 8, fontFamily: 'Roboto' }}>{post.posttext} </Text>
     </TouchableOpacity>
-    {post.replyingEmail != "" && route.name != "UserPost" &&(
-           <Pressable onPress={() => navigation.navigate("UserPost", {
-            post: replypost,
-            tempdata: replydata,
-   
-  
-            })} style={{margin: 4}}>
-          <View style={{  flexDirection: 'row', padding: 7, borderRadius: 12,backgroundColor: '#F8F8F8' }}>
-                   <View>
-                       <Image
-                           style={{ width: 40, height: 40, borderRadius: 50, }}
-                           source={{ uri: replydata?.profile }}
-                       />
-                   </View>
-                   <View style={{ marginLeft: 10, marginRight: 10,flex: 1 }}>
-                   {/* */}
-                       <Text style={{  marginRight: 18 }}>{replydata?.username}</Text>
-                       <Text numberOfLines={2} style={{  marginRight: 18 }}>{replypost.posttext}</Text>
-                   </View> 
-               </View>
-         </Pressable>
-         )}
+    
     <View >
       <ScrollView horizontal={true} >
         <View style={{ justifyContent: 'center' }}>
@@ -326,9 +305,7 @@ const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replyp
       style={{
         marginRight: 15,
         marginLeft: 15,
-        paddingBottom: 6,
         flexDirection: "row",
-
         alignItems: 'center'
       }}
     >
@@ -390,8 +367,7 @@ const PostFooter = ({
   replies
 }) => (
   <View style={{
-    marginLeft: 10, marginRight: 10, marginBottom: 4, borderTopColor: '#E9E9E9',
-    borderTopWidth: 1, flexDirection: 'row', alignItems: 'center'
+    marginLeft: 10, marginRight: 10, marginBottom: 4, flexDirection: 'row', alignItems: 'center'
   }}>
     <View
       style={{
@@ -399,7 +375,6 @@ const PostFooter = ({
         alignItems: 'center',
         marginLeft: 4,
         marginRight: 4,
-        marginTop: 6,
         marginBottom: 4,
         width: "auto",
         justifyContent: 'center',
@@ -424,7 +399,7 @@ const PostFooter = ({
   style={{ flexDirection: "row", padding: 4, alignItems: 'center' }}
   onPress={() => handleLike()}
 >
-<Ionicons name="heart-outline" size={21} color="#919191" />
+<Ionicons name="heart-outline" size={21} color="#595959" />
 
  <Text style={{ fontSize: 14, marginRight: 6, color: '#595959', marginLeft: 4 }}>
          {post.likes.length} Likes

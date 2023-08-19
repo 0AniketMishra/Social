@@ -13,8 +13,8 @@ const ProfileScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <ScrollView>
-      <View>
-        <Header />
+      <View> 
+        <Header /> 
         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
           <View style={{ marginLeft: 18 }}>
             <Image
