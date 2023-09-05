@@ -83,8 +83,6 @@ const PlusBody = () => {
           image3: image3,
           image4: image4,
           posttext: text, 
-          replyingOn: "none", 
-          replyingTo: "none",
         })
       })
         .then(res => res.json())

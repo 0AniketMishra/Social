@@ -3,8 +3,9 @@ import React,{memo} from 'react'
 import { useNavigation } from '@react-navigation/native'
 
 const UserList = ({data}) => {
-    const navigation = useNavigation()
-  return (
+    
+
+    return (
     <View >
 {data.map((user, index) => (
             <TouchableOpacity key={user._id} style={{ padding: 10, borderRadius: 9, margin: 4, flexDirection: 'row', alignItems: 'center', marginLeft: 6, marginRight: 6,  }}

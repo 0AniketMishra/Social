@@ -23,6 +23,8 @@ import { onSnapshot, query, doc, collection, where, addDoc } from "firebase/fire
 import { FontAwesome5 } from "@expo/vector-icons";
 import axios from "axios";
 import { Entypo } from '@expo/vector-icons';
+import UserList from "./UserList";
+import Comments from "./Comments";
 
 
 const Post = ({ post }) => {
@@ -37,7 +39,9 @@ const Post = ({ post }) => {
   const [replydata, setReplyData] = useState([])
   const [replypost, setReplyPost] = useState([])
   const[like,setLike] = useState(false)
-const [replies, setReplies] = useState(null)
+  const [fullModal, setFullModal] = useState(false)
+
+const [comments, setComments] = useState([{"__v": 9, "_id": "63fa2d54052a50f801519fe7", "allmessages": [], "descritption": "This is one of the first dummy replies of this application so I am trying to make it long so that I could notice the real space.", "email": "b@gmail.com", "followers": ["a@gmail.com"], "following": [], "lowerUsername": "@b@gmail.com", "profile": "", "username": "b@gmail.com"}, {"__v": 33, "_id": "63fadb9905efa40ae4f93ec6", "allmessages": [], "descritption": "Hey there, I Am Using Social!", "email": "a@gmail.com", "followers": ["b@gmail.com", "b@gmail.com", "b@gmail.com", "a@gmail.com"], "following": ["a@gmail.com"], "lowerUsername": "@aniketmishra", "profile": "https://lovingnewyork.es/wp-content/uploads/2016/02/empire-state-mirador-161004120416001-1600x1067.jpeg", "username": "Aniket Mishra. "}, {"__v": 9, "_id": "64188540e4fa2d2524b9f76f", "allmessages": [], "descritption": "Off course, the comments should not look identical. ", "email": "nsahani198@gmail.com", "followers": ["b@gmail.com"], "following": [], "lowerUsername": "@omprakash", "profile": "", "username": "Om Prakash"}, {"__v": 18, "_id": "6434ba718f2585818d4891de", "allmessages": [], "descritption": "Hey there, I Am Using Social!", "email": "demo@gmail.com", "followers": [], "following": [], "lowerUsername": "@demoaccount", "password": "$2b$08$XO9ORhRPojEC.tm5G7aGX.cb0bCfnriisKbv6UpvyX7v9VHTe8d8O", "profile": "", "username": "Demo Account"}, {"__v": 6, "_id": "644ccae5bc08676636a5297d", "allmessages": [], "descritption": "I am expert at reusing", "email": "new@gmail.com", "followers": [], "following": [], "lowerUsername": "@donaldjtrump.", "password": "$2b$08$2LwV1itUIIJ7EWL2UzRLre1DVC16kf.N1o6J08uxbz73sd56bY/BG", "profile": "", "username": "Donald J Trump."}])
 
 // console.log(post)
 
@@ -81,75 +85,9 @@ const [replies, setReplies] = useState(null)
         }
       })
 
-      if(post.replyingEmail != ""){
-
-        fetch('https://social-backend-three.vercel.app/userdata', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json', 
-
-    },
-    body: JSON.stringify({
-      email: post?.replyingEmail
-    })
-  })
-    .then(res => res.json())
-    .then(async data => {
-      if (data.message == "User Found") {
-        setReplyData(data.savedUser)
-      }
-    })
-
-
-    fetch('https://social-backend-three.vercel.app/postdata', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-
-    },
-    body: JSON.stringify({
-      postId: post?.replyingTo
-    })
-  })
-    .then(res => res.json())
-    .then(async data => {
-        setReplyPost(data.post) 
-        
-
-    })
-    fetch('https://social-backend-three.vercel.app/getreplies', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-
-    },
-    body: JSON.stringify({
-      _id: post._id 
-    })
-  })
-    .then(res => res.json())
-    .then(async data => {
-        setReplies(data.post)
-    })
-
-      }
+    
   },[])
 
-useEffect(() => {
-  fetch('https://social-backend-three.vercel.app/postdata', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      postId: post._id
-    })
-  })
-    .then(res => res.json())
-    .then(async data => {
-        let post = data
-    })
-})
 
   return (
     <View >
@@ -160,23 +98,31 @@ useEffect(() => {
 
       >
         <View style={styles.centeredView} >
-          <View style={styles.modalView}>
+          <View style={{  height: fullModal ? 500 : 622, backgroundColor: "white", borderTopRightRadius: 14,borderTopLeftRadius: 14,}}> 
           <View>
-        <View style={{ padding: 8, backgroundColor: 'white'}}>
-        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => setReplyModal(false)}>
-        < Entypo name="chevron-left" size={24} color="black" />
-        <Text style={{fontSize: 17, marginLeft: 3, fontWeight: 'bold'}}>Replies</Text>
+        <View style={{  backgroundColor: 'white',  borderTopLeftRadius: 14,borderTopRightRadius: 14,}}> 
+      <View style={{justifyContent: 'center', alignItems: 'center',marginTop: 6}}>
+      <TouchableOpacity style={{borderWidth: 2,borderRadius:21,width: 60,}} onPress={() => fullModal ? setFullModal(false) : setFullModal(true)}>
         </TouchableOpacity>
+      </View>
+        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center',padding:16}} onPress={() => setReplyModal(false)}>
+        <Ionicons name="arrow-back" size={24} color="black" />
+        <Text style={{fontSize: 17, marginLeft: 3, fontWeight: 'bold'}}>Comments</Text>
+        </TouchableOpacity>
+
+        <ScrollView>
+          <Comments data={comments}/>
+        </ScrollView>
         </View>
      </View>
           </View>
         </View>
       </Modal>
-      <View style={{ borderRadius: 6, backgroundColor: 'white', padding: 2, borderBottomWidth: 0.5, borderWidthColor: 'grey' }}>
+      <View style={{ borderRadius: 6, backgroundColor: 'white', padding: 2, }}>
         {/* background #F9FFFF was used previously */}
 
         <PostHeader post={post} navigation={navigation} userInfo={userInfo} tempdata={tempdata} />
-        <PostBody post={post} route={route} replies={replies}  navigation={navigation} user={user} dimensions={dimensions} tempdata={tempdata} replydata={replydata} replypost={replypost}/>
+        <PostBody post={post} route={route} comments={comments}  navigation={navigation} user={user} dimensions={dimensions} tempdata={tempdata} replydata={replydata} replypost={replypost}/>
         <PostFooter
           post={post}
           handleLike={handleLike}
@@ -188,7 +134,7 @@ useEffect(() => {
           onChangeText={onChangeText}
           setPostInfo={setPostInfo}
           like={like}
-          replies={replies}
+          comments={comments}
         />
 
       </View>
@@ -217,7 +163,7 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata,
         >
           {tempdata.username}
         </Text>
-        <View style={{ flexDirection: "row", alignItems: 'center' }}>
+        <View style={{ flexDirection: "row", alignItems: 'center' }}> 
 
           <Text style={{ marginLeft: 6, fontSize: 13 }}>{tempdata.lowerUsername} • 2 hours ago</Text>
         </View>
@@ -231,7 +177,7 @@ const PostHeader = ({ post, navigation, follower, following, userInfo, tempdata,
     </View>
   </View>
 );
-const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replypost, route,replies }) => (
+const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replypost, route,comments }) => (
 
 
 
@@ -245,13 +191,7 @@ const PostBody = ({ post,navigation, user, dimensions, tempdata,replydata,replyp
       marginTop: 6,
 
     }}
-      onPress={() => navigation.navigate("UserPost", {
-      post: post,
-      tempdata: tempdata, 
-
-   
-
-      })}
+      
     >
       <Text style={{ fontSize: 15, fontWeight: "400", marginBottom: 8, fontFamily: 'Roboto' }}>{post.posttext} </Text>
     </TouchableOpacity>
@@ -364,7 +304,7 @@ const PostFooter = ({
   handleUnlike, 
   like, 
   setLike,
-  replies
+
 }) => (
   <View style={{
     marginLeft: 10, marginRight: 10, marginBottom: 4, flexDirection: 'row', alignItems: 'center'
@@ -402,7 +342,7 @@ const PostFooter = ({
 <Ionicons name="heart-outline" size={21} color="#595959" />
 
  <Text style={{ fontSize: 14, marginRight: 6, color: '#595959', marginLeft: 4 }}>
-         {post.likes.length} Likes
+         {post.likes.length} likes
        </Text>
      </Pressable>
 
@@ -416,7 +356,7 @@ const PostFooter = ({
         }
       >
         <Ionicons name="chatbubble-outline" size={21} color="#595959" />
-        <Text style={{ marginLeft: 4, fontSize: 14, color: "#595959", marginRight: 4 }}>{!replies ? 0 : replies?.length} Comments</Text>
+        <Text style={{ marginLeft: 4, fontSize: 14, color: "#595959", marginRight: 4 }}>{!comments ? 0 : comments?.length} comments</Text>
       </TouchableOpacity>
 
     </View>
@@ -445,11 +385,8 @@ const styles = StyleSheet.create({
 
   },
   modalView: {
-    height: 500,
-    backgroundColor: "white",
-    padding: 10,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12
+  
+  
  
   },
   button: {
