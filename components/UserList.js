@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 
 const UserList = ({data}) => {
     
-
+const navigation = useNavigation()
     return (
     <View >
 {data.map((user, index) => (
